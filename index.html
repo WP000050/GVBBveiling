@@ -6,8 +6,6 @@
   <title>Schoolfeest Kunstveiling — VBS Booischot</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <script src="/_sdk/element_sdk.js"></script>
-  <script src="/_sdk/data_sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -49,9 +47,11 @@
       to   { opacity: 1; transform: translateY(0); }
     }
   </style>
- <script src="/_sdk/telemetry_sdk.js"></script></head>
+ </head>
  <body class="h-full bg-stone-50 text-gray-800 overflow-auto">
-  <div id="app" class="h-full w-full"><div id="view-register" class="min-h-full flex items-center justify-center p-4">
+  <div id="app" class="h-full w-full">
+   
+   <div id="view-register" class="min-h-full flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 w-full max-w-md fade-in border-t-8 border-[#2e7d32]">
      <div class="text-center mb-6">
       <h1 id="reg-title" class="text-2xl font-extrabold text-[#2e7d32]">VBS BOOISCHOT VEILING</h1>
@@ -59,48 +59,70 @@
      </div>
      <form id="reg-form" class="space-y-4">
       <div>
-       <label for="rf-first" class="block text-sm font-bold text-gray-700 mb-1">Voornaam *</label><input id="rf-first" type="text" required class="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-200 focus:border-[#2e7d32] outline-none transition-all bg-gray-50 focus:bg-white">
+       <label for="rf-first" class="block text-sm font-bold text-gray-700 mb-1">Voornaam *</label>
+       <input id="rf-first" type="text" required class="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-200 focus:border-[#2e7d32] outline-none transition-all bg-gray-50 focus:bg-white">
       </div>
       <div>
-       <label for="rf-last" class="block text-sm font-bold text-gray-700 mb-1">Achternaam *</label><input id="rf-last" type="text" required class="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-200 focus:border-[#2e7d32] outline-none transition-all bg-gray-50 focus:bg-white">
+       <label for="rf-last" class="block text-sm font-bold text-gray-700 mb-1">Achternaam *</label>
+       <input id="rf-last" type="text" required class="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-200 focus:border-[#2e7d32] outline-none transition-all bg-gray-50 focus:bg-white">
       </div>
       <div>
-       <label for="rf-phone" class="block text-sm font-bold text-gray-700 mb-1">Telefoonnummer *</label><input id="rf-phone" type="tel" required class="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-200 focus:border-[#2e7d32] outline-none transition-all bg-gray-50 focus:bg-white">
+       <label for="rf-phone" class="block text-sm font-bold text-gray-700 mb-1">Telefoonnummer *</label>
+       <input id="rf-phone" type="tel" required class="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-200 focus:border-[#2e7d32] outline-none transition-all bg-gray-50 focus:bg-white">
       </div>
       <div>
-       <label for="rf-email" class="block text-sm font-bold text-gray-700 mb-1">E-mail *</label><input id="rf-email" type="email" required class="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-200 focus:border-[#2e7d32] outline-none transition-all bg-gray-50 focus:bg-white">
+       <label for="rf-email" class="block text-sm font-bold text-gray-700 mb-1">E-mail *</label>
+       <input id="rf-email" type="email" required class="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-200 focus:border-[#2e7d32] outline-none transition-all bg-gray-50 focus:bg-white">
       </div>
       <div class="flex items-start gap-2 pt-1">
-       <input id="rf-terms" type="checkbox" required class="mt-1 w-4 h-4 accent-[#2e7d32]"><label for="rf-terms" class="text-sm text-gray-600">Ik ga akkoord met de <button type="button" onclick="showTerms()" class="text-[#2e7d32] underline font-bold hover:text-[#1b5e20]">algemene voorwaarden</button> *</label>
-      </div><button type="submit" id="reg-btn" class="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-lg transition-colors shadow-md shadow-green-900/10 mt-2">Registreren & Bieden</button>
-      <p id="reg-error" class="text-red-600 text-sm font-semibold hidden"></p><button type="button" onclick="showAdminPanel()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 rounded-lg text-sm transition-colors mt-2 border border-gray-200">🔐 Admin</button>
+       <input id="rf-terms" type="checkbox" required class="mt-1 w-4 h-4 accent-[#2e7d32]">
+       <label for="rf-terms" class="text-sm text-gray-600">Ik ga akkoord met de <button type="button" onclick="showTerms()" class="text-[#2e7d32] underline font-bold hover:text-[#1b5e20]">algemene voorwaarden</button> *</label>
+      </div>
+      <button type="submit" id="reg-btn" class="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-lg transition-colors shadow-md mt-2">Registreren & Bieden</button>
+      <p id="reg-error" class="text-red-600 text-sm font-semibold hidden"></p>
+      <button type="button" onclick="showAdminPanel()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 rounded-lg text-sm transition-colors mt-2 border border-gray-200">🔐 Admin</button>
      </form>
     </div>
-   </div><div id="admin-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
+   </div>
+
+   <div id="admin-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
     <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm fade-in">
      <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-bold text-gray-800">🔐 Admin Toegang</h2><button onclick="closeAdminModal()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" style="width:24px;height:24px;"></i></button>
+      <h2 class="text-lg font-bold text-gray-800">🔐 Admin Toegang</h2>
+      <button onclick="closeAdminModal()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" style="width:24px;height:24px;"></i></button>
      </div>
      <p class="text-sm text-gray-600 mb-4">Voer het admin-wachtwoord in.</p>
-     <div class="mb-4"><label for="admin-password-input" class="block text-sm font-bold mb-2">Wachtwoord:</label> <input id="admin-password-input" type="password" placeholder="Voer wachtwoord in" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-200 focus:border-[#2e7d32] outline-none bg-gray-50" onkeypress="if(event.key==='Enter') verifyAdminPassword();">
-     </div><button onclick="verifyAdminPassword()" class="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-lg transition-colors shadow-md">✅ Verifieer</button>
+     <div class="mb-4">
+      <label for="admin-password-input" class="block text-sm font-bold mb-2">Wachtwoord:</label> 
+      <input id="admin-password-input" type="password" placeholder="Voer wachtwoord in" class="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-200 focus:border-[#2e7d32] outline-none bg-gray-50" onkeypress="if(event.key==='Enter') verifyAdminPassword();">
+     </div>
+     <button onclick="verifyAdminPassword()" class="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-lg transition-colors shadow-md">✅ Verifieer</button>
      <p id="admin-error" class="text-red-600 text-sm mt-3 font-semibold hidden"></p>
     </div>
-   </div><div id="view-gallery" class="min-h-full hidden">
+   </div>
+
+   <div id="view-gallery" class="min-h-full hidden">
     <header class="bg-white shadow-sm border-b-2 border-gray-100 sticky top-0 z-30">
      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <h1 id="gallery-title" class="text-xl font-extrabold text-[#2e7d32]">🎨 VBS BOOISCHOT VEILING</h1>
-      <div class="flex gap-2"><button onclick="showMyBids()" class="flex items-center gap-1 bg-green-50 hover:bg-[#e8f5e9] text-[#2e7d32] font-bold px-3 py-2 rounded-lg text-sm transition-colors border border-green-100"><i data-lucide="user" style="width:16px;height:16px;"></i>Mijn biedingen</button> <button id="toggle-bidding-btn" onclick="toggleBidding()" class="hidden flex items-center gap-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold px-3 py-2 rounded-lg text-sm transition-colors"><i data-lucide="check-circle" style="width:16px;height:16px;"></i>Bieden actief</button> <a id="tv-link" href="#tv" onclick="showTV(); return false;" class="hidden flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold px-3 py-2 rounded-lg text-sm transition-colors border border-blue-100"><i data-lucide="tv" style="width:16px;height:16px;"></i>TV-weergave</a>
+      <div class="flex gap-2">
+       <button onclick="showMyBids()" class="flex items-center gap-1 bg-green-50 hover:bg-[#e8f5e9] text-[#2e7d32] font-bold px-3 py-2 rounded-lg text-sm transition-colors border border-green-100"><i data-lucide="user" style="width:16px;height:16px;"></i>Mijn biedingen</button> 
+       <button id="toggle-bidding-btn" onclick="toggleBidding()" class="hidden flex items-center gap-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold px-3 py-2 rounded-lg text-sm transition-colors"><i data-lucide="check-circle" style="width:16px;height:16px;"></i>Bieden actief</button> 
+       <a id="tv-link" href="#tv" onclick="showTV(); return false;" class="hidden flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold px-3 py-2 rounded-lg text-sm transition-colors border border-blue-100"><i data-lucide="tv" style="width:16px;height:16px;"></i>TV-weergave</a>
       </div>
      </div>
     </header>
     <main class="max-w-6xl mx-auto px-4 py-6">
+     <div id="loading-indicator" class="text-center py-12 text-gray-500 font-bold">🔄 Actuele biedingen inladen uit de spreadsheet...</div>
      <div id="paintings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
     </main>
-   </div><div id="view-mybids" class="min-h-full hidden">
+   </div>
+
+   <div id="view-mybids" class="min-h-full hidden">
     <header class="bg-white shadow-sm sticky top-0 z-30">
      <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-      <h1 class="text-xl font-extrabold text-[#2e7d32]">📋 Mijn biedingen</h1><button onclick="showGallery()" class="flex items-center gap-1 bg-green-50 hover:bg-[#e8f5e9] text-[#2e7d32] font-bold px-3 py-2 rounded-lg text-sm transition-colors border border-green-100"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i>Terug</button>
+      <h1 class="text-xl font-extrabold text-[#2e7d32]">📋 Mijn biedingen</h1>
+      <button onclick="showGallery()" class="flex items-center gap-1 bg-green-50 hover:bg-[#e8f5e9] text-[#2e7d32] font-bold px-3 py-2 rounded-lg text-sm transition-colors border border-green-100"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i>Terug</button>
      </div>
     </header>
     <main class="max-w-4xl mx-auto px-4 py-6">
@@ -108,15 +130,19 @@
      <div id="mybids-list" class="space-y-3"></div>
      <p id="mybids-empty" class="text-center text-gray-400 py-8 hidden">Je hebt nog geen biedingen geplaatst.</p>
     </main>
-   </div><div id="view-detail" class="min-h-full hidden">
+   </div>
+
+   <div id="view-detail" class="min-h-full hidden">
     <header class="bg-white shadow-sm sticky top-0 z-30">
      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-      <h1 id="detail-title" class="text-xl font-extrabold text-[#2e7d32]"></h1><button onclick="showGallery()" class="flex items-center gap-1 bg-green-50 hover:bg-[#e8f5e9] text-[#2e7d32] font-bold px-3 py-2 rounded-lg text-sm transition-colors border border-green-100"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i>Terug</button>
+      <h1 id="detail-title" class="text-xl font-extrabold text-[#2e7d32]"></h1>
+      <button onclick="showGallery()" class="flex items-center gap-1 bg-green-50 hover:bg-[#e8f5e9] text-[#2e7d32] font-bold px-3 py-2 rounded-lg text-sm transition-colors border border-green-100"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i>Terug</button>
      </div>
     </header>
     <main class="max-w-5xl mx-auto px-4 py-6">
      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-2"><img id="detail-image" src="" alt="" loading="lazy" class="rounded-2xl shadow-lg border border-gray-200" style="object-fit:contain; max-width:100%; height:auto;" onerror="this.style.background='#e5e7eb'; this.alt='Afbeelding kon niet geladen worden';">
+      <div class="lg:col-span-2">
+       <img id="detail-image" src="" alt="" loading="lazy" class="rounded-2xl shadow-lg border border-gray-200" style="object-fit:contain; max-width:100%; height:auto;" onerror="this.style.background='#e5e7eb'; this.alt='Afbeelding kon niet geladen worden';">
       </div>
       <div class="space-y-4">
        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
@@ -126,39 +152,51 @@
        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
         <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Huidig hoogste bod</p>
         <div id="detail-bid" class="text-2xl font-black text-[#2e7d32]"></div>
-       </div><button onclick="showGallery()" class="w-full bg-green-50 hover:bg-[#e8f5e9] text-[#2e7d32] font-bold py-3 rounded-lg transition-colors border border-green-200">← Terug naar galerij</button>
+       </div>
+       <button id="detail-bid-btn" class="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-lg transition-colors shadow-md">💶 Nu Bod Uitbrengen</button>
       </div>
      </div>
     </main>
-   </div><div id="bid-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
+   </div>
+
+   <div id="bid-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
     <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm fade-in border-t-4 border-[#2e7d32]">
      <div class="flex justify-between items-center mb-4">
-      <h2 id="modal-title" class="text-lg font-bold text-gray-800"></h2><button onclick="closeBidModal()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" style="width:24px;height:24px;"></i></button>
+      <h2 id="modal-title" class="text-lg font-bold text-gray-800"></h2>
+      <button onclick="closeBidModal()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" style="width:24px;height:24px;"></i></button>
      </div>
      <div id="modal-current" class="bg-green-50 rounded-lg p-3 mb-4 text-sm border border-green-100 text-green-900"></div>
-     <div class="mb-4"><label class="block text-sm font-bold text-gray-700 mb-2">Jouw bod:</label> <input type="range" id="bid-slider" class="w-full" oninput="updateBidPreview()">
+     <div class="mb-4">
+      <label class="block text-sm font-bold text-gray-700 mb-2">Jouw bod:</label> 
+      <input type="range" id="bid-slider" class="w-full" oninput="updateBidPreview()">
       <div id="bid-preview" class="text-center text-3xl font-black text-[#2e7d32] mt-2"></div>
-     </div><button id="bid-confirm-btn" onclick="confirmBid()" class="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-lg transition-colors shadow-md">✅ Bevestig bod</button>
+     </div>
+     <button id="bid-confirm-btn" onclick="confirmBid()" class="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-lg transition-colors shadow-md">✅ Bevestig bod</button>
      <p id="bid-msg" class="text-sm mt-3 text-center hidden"></p>
     </div>
-   </div><div id="terms-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
+   </div>
+
+   <div id="terms-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
     <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md max-h-[80%] overflow-auto fade-in">
      <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-bold text-gray-900 border-b pb-2 w-full">Algemene Voorwaarden</h2><button onclick="hideTerms()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" style="width:24px;height:24px;"></i></button>
+      <h2 class="text-lg font-bold text-gray-900 border-b pb-2 w-full">Algemene Voorwaarden</h2>
+      <button onclick="hideTerms()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" style="width:24px;height:24px;"></i></button>
      </div>
      <div class="text-sm text-gray-600 space-y-3">
       <p><strong>1. Bindend karakter:</strong> Elk geplaatst bod is bindend. Door te bieden ga je een koopverplichting aan indien je het hoogste bod hebt op het einde van het schoolfeest.</p>
       <p><strong>2. Winnaar:</strong> Het hoogste bod per schilderij op het einde van het schoolfeest wint de veiling voor dat werk.</p>
-      <p><strong>3. Aanwezigheid:</strong> De winnaar moet aanwezig zijn op het schoolfeest om het werk in ontvangst te nemen en te betalen.</p>
-      <p><strong>4. Privacy:</strong> Je gegevens worden enkel gebruikt voor de organisatie van deze veiling en worden niet gedeeld met derden.</p>
-      <p><strong>5. Bewaartermijn:</strong> Alle persoonsgegevens worden uiterlijk 30 dagen na het schoolfeest verwijderd.</p>
-      <p><strong>6. Contact:</strong> Voor vragen kan je terecht bij de organisatie van het schoolfeest.</p>
-     </div><button onclick="hideTerms()" class="w-full mt-5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-2.5 rounded-lg transition-colors shadow-md">Sluiten</button>
+      <p><strong>3. Aanwezigheid:</strong> De winnaar dient het werk in ontvangst te nemen en te betalen volgens de richtlijnen van het feest.</p>
+      <p><strong>4. Privacy:</strong> Je gegevens worden enkel gebruikt voor deze veiling en worden na 30 dagen verwijderd.</p>
+     </div>
+     <button onclick="hideTerms()" class="w-full mt-5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-2.5 rounded-lg transition-colors shadow-md">Sluiten</button>
     </div>
-   </div><div id="view-tv" class="min-h-full hidden bg-slate-950 text-white">
+   </div>
+
+   <div id="view-tv" class="min-h-full hidden bg-slate-950 text-white">
     <header class="bg-slate-900 border-b border-slate-800 shadow-lg sticky top-0 z-30 py-4 px-8">
      <div class="flex items-center justify-between">
-      <h1 class="text-4xl font-extrabold tracking-tight text-green-400">🎨 LIVE KUNSTVEILING</h1><button onclick="backFromTV()" class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-lg transition-colors"><i data-lucide="x" style="width:24px;height:24px;"></i>Sluiten</button>
+      <h1 class="text-4xl font-extrabold tracking-tight text-green-400">🎨 LIVE KUNSTVEILING</h1>
+      <button onclick="backFromTV()" class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-lg transition-colors"><i data-lucide="x" style="width:24px;height:24px;"></i>Sluiten</button>
      </div>
     </header>
     <main class="max-w-7xl mx-auto px-8 py-8">
@@ -166,10 +204,13 @@
      <p id="tv-empty" class="text-center text-gray-400 text-2xl py-16 hidden">Geen biedingen gevonden.</p>
     </main>
    </div>
+
    <script>
     // ============================================================
-    // WERKEN / SCHILDERIJEN (19 stuks met gecorrigeerde URL's)
+    // RECHTSTREEKSE APPS SCRIPT KOPPELING (VERVANGT DE SDK)
     // ============================================================
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0Hhm57QavINrPfva6jFs9bNdsoicw1Hqsc3ZfOGXW5JFGR50gnc2trGHdaa5iTBH_/exec";
+
     let PAINTINGS = [
       { painting_id: 'p1',  class_name: 'Bloemenklas', image_url: 'https://raw.githubusercontent.com/WP000050/GVBBveiling/refs/heads/main/Bloemenklas.jpg', starting_price: 5 },
       { painting_id: 'p2',  class_name: 'Vosjesklas', image_url: 'https://raw.githubusercontent.com/WP000050/GVBBveiling/refs/heads/main/Vosjesklas.jpg', starting_price: 5 },
@@ -192,28 +233,41 @@
       { painting_id: 'p19', class_name: 'L6b', image_url: 'https://raw.githubusercontent.com/WP000050/GVBBveiling/refs/heads/main/L6b.jpg', starting_price: 5 }
     ];
 
-    // Subtiele achtergrondkleuren voor fallbacks in de huisstijl
     const COLORS = ['#f4f9f4','#f0f7f0','#eaf4ea','#f4f9f4','#f0f7f0','#eaf4ea','#f4f9f4','#f0f7f0','#eaf4ea','#f4f9f4','#f0f7f0','#eaf4ea','#f4f9f4','#f0f7f0','#eaf4ea','#f4f9f4','#f0f7f0','#eaf4ea','#f4f9f4'];
 
-    // ============================================================
-    // APP STATE
-    // ============================================================
     let currentUser = null;
     let allBids = [];
     let currentBidPaintingId = null;
     let biddingEnabled = true;
 
-    // ============================================================
-    // HELPERS
-    // ============================================================
+    async function fetchAllBids() {
+      try {
+        const response = await fetch(SCRIPT_URL);
+        const result = await response.json();
+        if (result.isOk) {
+          allBids = result.data;
+          document.getElementById('loading-indicator')?.classList.add('hidden');
+          refreshCurrentView();
+        }
+      } catch (err) {
+        console.error("Fout bij ophalen biedingen:", err);
+      }
+    }
+
+    function refreshCurrentView() {
+      if (!document.getElementById('view-gallery').classList.contains('hidden')) renderGallery();
+      if (!document.getElementById('view-mybids').classList.contains('hidden')) renderMyBids();
+      if (!document.getElementById('view-tv').classList.contains('hidden')) renderTV();
+      if (!document.getElementById('view-detail').classList.contains('hidden') && currentBidPaintingId) showDetail(currentBidPaintingId);
+    }
+
+    // Interval om elke 15 seconden automatisch de nieuwe biedingen binnen te halen (live sync!)
+    setInterval(fetchAllBids, 15000);
+
     function formatDate(isoStr) {
+      if(!isoStr) return "";
       const d = new Date(isoStr);
-      const dd = String(d.getDate()).padStart(2, '0');
-      const mm = String(d.getMonth() + 1).padStart(2, '0');
-      const yyyy = d.getFullYear();
-      const hh = String(d.getHours()).padStart(2, '0');
-      const min = String(d.getMinutes()).padStart(2, '0');
-      return `${dd}-${mm}-${yyyy} ${hh}:${min}`;
+      return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
     }
 
     function getPaintingLabel(paintingId) {
@@ -222,29 +276,15 @@
     }
 
     function getHighestBid(paintingId) {
-      const accepted = allBids.filter(b => b.painting_id === paintingId && b.bid_status === 'accepted');
+      const accepted = allBids.filter(b => b.painting_id === paintingId);
       if (accepted.length === 0) return null;
-      let max = accepted[0];
-      for (let i = 1; i < accepted.length; i++) {
-        if (Number(accepted[i].bid_amount) > Number(max.bid_amount)) {
-          max = accepted[i];
-        }
-      }
-      return max;
-    }
-
-    function getStartingPrice(paintingId) {
-      const p = PAINTINGS.find(x => x.painting_id === paintingId);
-      return p ? p.starting_price : 5;
+      return accepted.reduce((max, b) => Number(b.bid_amount) > Number(max.bid_amount) ? b : max, accepted[0]);
     }
 
     function getClassLabel(className) {
-      return className && className.trim() ? `Klas ${className}` : 'Klas nog in te vullen';
+      return className && className.trim() ? `${className}` : 'Klas nog in te vullen';
     }
 
-    // ============================================================
-    // NAVIGATIE
-    // ============================================================
     function showView(id) {
       ['view-register', 'view-gallery', 'view-mybids', 'view-detail', 'view-tv'].forEach(v => {
         document.getElementById(v).classList.add('hidden');
@@ -267,23 +307,24 @@
       renderTV();
     }
 
-    function backFromTV() {
-      showGallery();
-    }
+    function backFromTV() { showGallery(); }
 
     function showDetail(paintingId) {
+      currentBidPaintingId = paintingId;
       const p = PAINTINGS.find(x => x.painting_id === paintingId);
       if (!p) return;
       document.getElementById('detail-title').textContent = getPaintingLabel(paintingId);
       document.getElementById('detail-image').src = p.image_url;
-      document.getElementById('detail-image').alt = getPaintingLabel(paintingId);
       document.getElementById('detail-class').textContent = getClassLabel(p.class_name);
+      
       const highest = getHighestBid(paintingId);
       if (highest) {
         document.getElementById('detail-bid').innerHTML = `€${Number(highest.bid_amount)}<br><span class="text-xs text-gray-400 font-normal">${formatDate(highest.created_at)}</span>`;
       } else {
         document.getElementById('detail-bid').textContent = `€${p.starting_price} (startprijs)`;
       }
+      
+      document.getElementById('detail-bid-btn').onclick = (e) => openBidModal(e, paintingId);
       showView('view-detail');
       lucide.createIcons();
     }
@@ -291,101 +332,51 @@
     function toggleBidding() {
       biddingEnabled = !biddingEnabled;
       const btn = document.getElementById('toggle-bidding-btn');
-      if (biddingEnabled) {
-        btn.className = 'flex items-center gap-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold px-3 py-2 rounded-lg text-sm transition-colors';
-        btn.innerHTML = '<i data-lucide="check-circle" style="width:16px;height:16px;"></i>Bieden actief';
-      } else {
-        btn.className = 'flex items-center gap-1 bg-red-100 hover:bg-red-200 text-red-800 font-bold px-3 py-2 rounded-lg text-sm transition-colors border border-red-200';
-        btn.innerHTML = '<i data-lucide="stop-circle" style="width:16px;height:16px;"></i>Bieden gestopt';
-      }
+      btn.innerHTML = biddingEnabled ? '<i data-lucide="check-circle" style="width:16px;height:16px;"></i>Bieden actief' : '<i data-lucide="stop-circle" style="width:16px;height:16px;"></i>Bieden gestopt';
+      btn.className = biddingEnabled ? 'flex items-center gap-1 bg-emerald-100 text-emerald-800 font-bold px-3 py-2 rounded-lg text-sm' : 'flex items-center gap-1 bg-red-100 text-red-800 font-bold px-3 py-2 rounded-lg text-sm';
       lucide.createIcons();
     }
 
-    // ============================================================
-    // ADMIN
-    // ============================================================
     function showAdminPanel() {
-      document.getElementById('admin-modal').classList.remove('hidden');
       document.getElementById('admin-modal').style.display = 'flex';
-      document.getElementById('admin-password-input').value = '';
-      document.getElementById('admin-error').classList.add('hidden');
-      setTimeout(() => document.getElementById('admin-password-input').focus(), 100);
+      document.getElementById('admin-modal').classList.remove('hidden');
     }
 
     function closeAdminModal() {
       document.getElementById('admin-modal').style.display = 'none';
-      document.getElementById('admin-modal').classList.add('hidden');
     }
 
     function verifyAdminPassword() {
-      const pwd = document.getElementById('admin-password-input').value;
-      const errorEl = document.getElementById('admin-error');
-      if (pwd === 'GVBB@m!n') {
+      if (document.getElementById('admin-password-input').value === 'GVBB@m!n') {
         closeAdminModal();
         document.getElementById('toggle-bidding-btn').classList.remove('hidden');
         document.getElementById('tv-link').classList.remove('hidden');
         localStorage.setItem('veiling_admin', 'true');
       } else {
-        errorEl.textContent = '❌ Wachtwoord onjuist.';
-        errorEl.classList.remove('hidden');
+        document.getElementById('admin-error').textContent = '❌ Wachtwoord onjuist.';
+        document.getElementById('admin-error').classList.remove('hidden');
       }
     }
 
-    (function checkAdmin() {
-      if (localStorage.getItem('veiling_admin') === 'true') {
-        document.getElementById('toggle-bidding-btn').classList.remove('hidden');
-        document.getElementById('tv-link').classList.remove('hidden');
-      }
-    })();
-
-    // ============================================================
-    // REGISTRATIE
-    // ============================================================
     document.getElementById('reg-form').addEventListener('submit', function (e) {
       e.preventDefault();
-      const firstname = document.getElementById('rf-first').value.trim();
-      const lastname = document.getElementById('rf-last').value.trim();
-      const phone = document.getElementById('rf-phone').value.trim();
-      const email = document.getElementById('rf-email').value.trim();
-      const terms = document.getElementById('rf-terms').checked;
-
-      if (!firstname || !lastname || !phone || !email) {
-        showRegError('Vul alle verplichte velden in.');
-        return;
-      }
-      if (!terms) {
-        showRegError('Je moet akkoord gaan met de voorwaarden.');
-        return;
-      }
-      currentUser = { firstname, lastname, phone, email };
+      currentUser = {
+        firstname: document.getElementById('rf-first').value.trim(),
+        lastname: document.getElementById('rf-last').value.trim(),
+        phone: document.getElementById('rf-phone').value.trim(),
+        email: document.getElementById('rf-email').value.trim()
+      };
       localStorage.setItem('veiling_user', JSON.stringify(currentUser));
       showGallery();
+      fetchAllBids();
     });
 
-    function showRegError(msg) {
-      const el = document.getElementById('reg-error');
-      el.textContent = msg;
-      el.classList.remove('hidden');
-      setTimeout(() => el.classList.add('hidden'), 4000);
-    }
-
-    (function checkUser() {
-      const stored = localStorage.getItem('veiling_user');
-      if (stored) {
-        currentUser = JSON.parse(stored);
-        showGallery();
-      }
-    })();
-
-    // ============================================================
-    // GALERIJ
-    // ============================================================
     function renderGallery() {
       const grid = document.getElementById('paintings-grid');
       if (grid.children.length === 0) {
         grid.innerHTML = PAINTINGS.map((p, i) => {
           return `<div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover cursor-pointer border border-gray-100" onclick="showDetail('${p.painting_id}')">
-            <img src="${p.image_url}" alt="${getPaintingLabel(p.painting_id)}" loading="lazy" class="h-40 w-full object-cover border-b border-gray-100" onerror="this.style.background='${COLORS[i]}'; this.style.height='160px';" />
+            <img src="${p.image_url}" alt="${getPaintingLabel(p.painting_id)}" loading="lazy" class="h-40 w-full object-cover border-b border-gray-100" onerror="this.style.background='${COLORS[i]}';" />
             <div class="p-4">
               <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-0.5">${getPaintingLabel(p.painting_id)}</p>
               <p class="text-sm font-bold text-gray-700 mb-3">${getClassLabel(p.class_name)}</p>
@@ -395,21 +386,18 @@
           </div>`;
         }).join('');
       }
+      
       PAINTINGS.forEach(p => {
         const el = document.getElementById(`bid-info-${p.painting_id}`);
         const highest = getHighestBid(p.painting_id);
         if (highest) {
-          el.innerHTML = `<div class="bg-green-50 rounded-lg p-2 border border-green-100 text-center"><span class="font-extrabold text-[#2e7d32] text-base">€${Number(highest.bid_amount)}</span> <span class="text-gray-400 text-xs block mt-0.5">${formatDate(highest.created_at)}</span></div>`;
+          el.innerHTML = `<div class="bg-green-50 rounded-lg p-2 border border-green-100 text-center"><span class="font-extrabold text-[#2e7d32] text-base">€${Number(highest.bid_amount)}</span></div>`;
         } else {
           el.innerHTML = `<div class="bg-gray-50 rounded-lg p-2 border border-gray-100 text-center text-gray-400 font-semibold text-xs">Startprijs: €${p.starting_price}</div>`;
         }
       });
-      lucide.createIcons();
     }
 
-    // ============================================================
-    // BIED-MODAL
-    // ============================================================
     function openBidModal(event, paintingId) {
       if (event) event.stopPropagation();
       if (!biddingEnabled) {
@@ -418,231 +406,137 @@
       }
       currentBidPaintingId = paintingId;
       const highest = getHighestBid(paintingId);
-      const currentMax = highest ? Number(highest.bid_amount) : getStartingPrice(paintingId) - 1;
+      const currentMax = highest ? Number(highest.bid_amount) : 4;
+      
       document.getElementById('modal-title').textContent = `Bod plaatsen - ${getPaintingLabel(paintingId)}`;
-      const infoEl = document.getElementById('modal-current');
-      if (highest) {
-        infoEl.innerHTML = `Huidig hoogste bod: <strong class="text-[#2e7d32]">€${Number(highest.bid_amount)}</strong><br><span class="text-xs opacity-70">${formatDate(highest.created_at)}</span>`;
-      } else {
-        infoEl.innerHTML = `Startprijs: <strong class="text-[#2e7d32]">€${getStartingPrice(paintingId)}</strong><br><span class="text-xs opacity-70">Nog geen biedingen</span>`;
-      }
+      document.getElementById('modal-current').innerHTML = highest ? `Huidig bod: <strong class="text-[#2e7d32]">€${currentMax}</strong>` : `Startprijs: <strong class="text-[#2e7d32]">€5</strong>`;
+      
       const slider = document.getElementById('bid-slider');
       slider.min = currentMax + 1;
-      slider.max = currentMax + 15;
-      slider.step = 1;
+      slider.max = currentMax + 25;
       slider.value = currentMax + 1;
+      
       updateBidPreview();
-      const btn = document.getElementById('bid-confirm-btn');
-      btn.disabled = false;
-      btn.textContent = '✅ Bevestig bod';
+      document.getElementById('bid-confirm-btn').disabled = false;
+      document.getElementById('bid-confirm-btn').textContent = '✅ Bevestig bod';
       document.getElementById('bid-msg').classList.add('hidden');
-      document.getElementById('bid-modal').classList.remove('hidden');
       document.getElementById('bid-modal').style.display = 'flex';
-      lucide.createIcons();
+      document.getElementById('bid-modal').classList.remove('hidden');
     }
 
-    function closeBidModal() {
-      document.getElementById('bid-modal').style.display = 'none';
-      document.getElementById('bid-modal').classList.add('hidden');
-      currentBidPaintingId = null;
-    }
-
-    function updateBidPreview() {
-      const val = document.getElementById('bid-slider').value;
-      document.getElementById('bid-preview').textContent = `€${val}`;
-    }
+    function closeBidModal() { document.getElementById('bid-modal').style.display = 'none'; }
+    function updateBidPreview() { document.getElementById('bid-preview').textContent = `€${document.getElementById('bid-slider').value}`; }
 
     async function confirmBid() {
-      if (!currentBidPaintingId || !currentUser) return;
       const btn = document.getElementById('bid-confirm-btn');
       btn.disabled = true;
       btn.textContent = '⏳ Verwerken...';
+      
       const bidAmount = Number(document.getElementById('bid-slider').value);
-      const highest = getHighestBid(currentBidPaintingId);
-      const currentMax = highest ? Number(highest.bid_amount) : getStartingPrice(currentBidPaintingId) - 1;
-      if (bidAmount <= currentMax) {
-        showBidMsg('❌ Je bod is niet meer geldig. Iemand heeft inmiddels hoger geboden.', 'red');
-        btn.textContent = '✅ Bevestig bod';
-        btn.disabled = false;
-        return;
-      }
-      if (allBids.length >= 999) {
-        showBidMsg('⚠️ Maximaal aantal biedingen bereikt.', 'red');
-        btn.textContent = '✅ Bevestig bod';
-        btn.disabled = false;
-        return;
-      }
-      const now = new Date().toISOString();
-      const result = await window.dataSdk.create({
+      const pData = PAINTINGS.find(x => x.painting_id === currentBidPaintingId);
+
+      const payload = {
         painting_id: currentBidPaintingId,
-        painting_title: getPaintingLabel(currentBidPaintingId),
+        painting_title: pData ? pData.class_name : getPaintingLabel(currentBidPaintingId),
         bidder_firstname: currentUser.firstname,
         bidder_lastname: currentUser.lastname,
         bidder_phone: currentUser.phone,
-        bidder_email: currentUser.email || '',
-        bid_amount: bidAmount,
-        created_at: now,
-        bid_status: 'accepted'
-      });
-      if (result.isOk) {
-        showBidMsg(`✅ Bod van €${bidAmount} geregistreerd!`, 'green');
-        setTimeout(() => { closeBidModal(); renderGallery(); }, 2000);
-      } else {
-        showBidMsg('❌ Er ging iets mis. Probeer opnieuw.', 'red');
-        btn.textContent = '✅ Bevestig bod';
+        bidder_email: currentUser.email,
+        bid_amount: bidAmount
+      };
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors', // Vereist voor Google Apps Script POST redirects
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        // Omdat Google Script 'no-cors' afdwingt bij redirects, kunnen we de response status niet direct lezen.
+        // We tonen direct een succesmelding en verversen direct de data op de achtergrond.
+        showBidMsg('✅ Bod succesvol verzonden!', 'green');
+        setTimeout(async () => {
+          closeBidModal();
+          await fetchAllBids();
+        }, 1500);
+
+      } catch (err) {
+        showBidMsg('❌ Serverfout. Probeer opnieuw.', 'red');
         btn.disabled = false;
+        btn.textContent = '✅ Bevestig bod';
       }
     }
 
     function showBidMsg(msg, color) {
       const el = document.getElementById('bid-msg');
       el.textContent = msg;
-      el.className = `text-sm mt-3 text-center text-${color === 'red' ? 'red' : 'green'}-700 font-bold`;
+      el.className = `text-sm mt-3 text-center text-${color}-700 font-bold`;
       el.classList.remove('hidden');
     }
 
-    // ============================================================
-    // MIJN BIEDINGEN
-    // ============================================================
     function renderMyBids() {
-      if (!currentUser) return;
-      const myBids = allBids.filter(b => b.bidder_phone === currentUser.phone && b.bid_status === 'accepted');
+      const myBids = allBids.filter(b => b.bidder_phone === currentUser.phone);
       const listEl = document.getElementById('mybids-list');
-      const emptyEl = document.getElementById('mybids-empty');
       const statsEl = document.getElementById('mybids-stats');
+      
       if (myBids.length === 0) {
         listEl.innerHTML = '';
-        emptyEl.classList.remove('hidden');
+        document.getElementById('mybids-empty').classList.remove('hidden');
         statsEl.innerHTML = '<p class="text-gray-500 text-sm font-semibold">Nog geen biedingen geplaatst.</p>';
         return;
       }
-      emptyEl.classList.add('hidden');
-      const uniquePaintings = new Set(myBids.map(b => b.painting_id));
-      let highestCount = 0;
-      uniquePaintings.forEach(pid => {
-        const highest = getHighestBid(pid);
-        if (highest && highest.bidder_phone === currentUser.phone) {
-          highestCount++;
-        }
-      });
-      statsEl.innerHTML = `<div class="grid grid-cols-3 gap-4 text-center"><div><span class="font-black text-[#2e7d32] text-2xl">${myBids.length}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Biedingen</span></div><div><span class="font-black text-emerald-600 text-2xl">${highestCount}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Winnend</span></div><div><span class="font-black text-blue-600 text-2xl">${uniquePaintings.size}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Unieke werken</span></div></div>`;
-      const sorted = [...myBids].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-      listEl.innerHTML = sorted.map(bid => {
-        const highest = getHighestBid(bid.painting_id);
-        const isHighest = highest && highest.__backendId === bid.__backendId;
-        const titleDisplay = bid.painting_title || bid.painting_id;
-        return `<div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center gap-3"><div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl bg-green-50 text-[#2e7d32]">🖼️</div><div class="flex-1"><p class="font-bold text-sm text-gray-900">${titleDisplay}</p><p class="text-xs text-gray-400 font-semibold">${formatDate(bid.created_at)} • ${bid.bidder_firstname}</p></div><div class="text-right"><p class="font-black text-[#2e7d32]">€${Number(bid.bid_amount)}</p>${isHighest ? '<span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Hoogste!</span>' : ''}</div></div>`;
-      }).join('');
+      document.getElementById('mybids-empty').classList.add('hidden');
+      
+      statsEl.innerHTML = `<div class="grid grid-cols-2 gap-4 text-center">
+        <div><span class="font-black text-[#2e7d32] text-2xl">${myBids.length}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Mijn Biedingen</span></div>
+        <div><span class="font-black text-blue-600 text-2xl">€${Math.max(...myBids.map(b=>b.bid_amount))}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Hoogste Bod</span></div>
+      </div>`;
+      
+      listEl.innerHTML = myBids.map(bid => `
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center justify-between">
+          <div><p class="font-bold text-sm text-gray-900">${getPaintingLabel(bid.painting_id)} (${bid.painting_title})</p></div>
+          <div class="text-right"><p class="font-black text-[#2e7d32]">€${bid.bid_amount}</p></div>
+        </div>
+      `).join('');
     }
 
-    // ============================================================
-    // TV VIEW
-    // ============================================================
     function renderTV() {
       const grid = document.getElementById('tv-grid');
-      const empty = document.getElementById('tv-empty');
-      if (allBids.length === 0) {
-        grid.innerHTML = '';
-        empty.classList.remove('hidden');
-        return;
+      const tvData = PAINTINGS.map(p => ({ painting: p, bid: getHighestBid(p.painting_id) })).filter(x => x.bid !== null);
+      
+      document.getElementById('tv-empty').classList.toggle('hidden', tvData.length > 0);
+      grid.innerHTML = tvData.map(item => `
+        <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-slate-800">
+          <div class="p-6">
+            <p class="text-2xl font-extrabold text-green-400 mb-1">${getPaintingLabel(item.painting.painting_id)}</p>
+            <p class="text-xl text-slate-300 font-bold mb-4">Klas: ${item.painting.class_name}</p>
+            <div class="bg-slate-800 rounded-xl p-4 border border-slate-700">
+              <p class="text-5xl font-black text-emerald-400">€${item.bid.bid_amount}</p>
+              <p class="text-base text-slate-300 font-bold mt-2">Bieder: ${item.bid.bidder_firstname} ${item.bid.bidder_lastname[0]}.</p>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function showTerms() { document.getElementById('terms-modal').style.display = 'flex'; document.getElementById('terms-modal').classList.remove('hidden'); }
+    function hideTerms() { document.getElementById('terms-modal').style.display = 'none'; }
+
+    (function init() {
+      if (localStorage.getItem('veiling_admin') === 'true') {
+        document.getElementById('toggle-bidding-btn').classList.remove('hidden');
+        document.getElementById('tv-link').classList.remove('hidden');
       }
-      empty.classList.add('hidden');
-      const tvData = [];
-      const seen = new Set();
-      PAINTINGS.forEach(p => {
-        const highest = getHighestBid(p.painting_id);
-        if (highest && !seen.has(p.painting_id)) {
-          seen.add(p.painting_id);
-          tvData.push({ painting: p, bid: highest });
-        }
-      });
-      grid.innerHTML = tvData.map(item => {
-        const { painting, bid } = item;
-        const label = getPaintingLabel(painting.painting_id);
-        return `<div class="bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-slate-800"><img src="${painting.image_url}" alt="${label}" loading="lazy" class="w-full h-64 object-cover" onerror="this.style.background='#334155'; this.style.height='256px';" /><div class="p-6"><p class="text-2xl font-extrabold text-green-400 mb-1">${label}</p><p class="text-xl text-slate-300 font-bold mb-4">${getClassLabel(painting.class_name)}</p><div class="bg-slate-800 rounded-xl p-4 border border-slate-700"><p class="text-slate-400 text-base font-semibold mb-1">Huidig bod:</p><p class="text-5xl font-black text-emerald-400">€${Number(bid.bid_amount)}</p><p class="text-base text-slate-300 font-bold mt-2">${bid.bidder_firstname} ${bid.bidder_lastname[0]}.</p><p class="text-xs text-slate-500 mt-0.5">${formatDate(bid.created_at)}</p></div></div></div>`;
-      }).join('');
+      const stored = localStorage.getItem('veiling_user');
+      if (stored) {
+        currentUser = JSON.parse(stored);
+        showGallery();
+        fetchAllBids();
+      }
       lucide.createIcons();
-    }
-
-    // ============================================================
-    // VOORWAARDEN
-    // ============================================================
-    function showTerms() {
-      document.getElementById('terms-modal').classList.remove('hidden');
-      document.getElementById('terms-modal').style.display = 'flex';
-      lucide.createIcons();
-    }
-
-    function hideTerms() {
-      document.getElementById('terms-modal').style.display = 'none';
-      document.getElementById('terms-modal').classList.add('hidden');
-    }
-
-    // ============================================================
-    // DATA SDK
-    // ============================================================
-    const dataHandler = {
-      onDataChanged(data) {
-        allBids = data;
-        if (!document.getElementById('view-gallery').classList.contains('hidden')) {
-          renderGallery();
-        }
-        if (!document.getElementById('view-mybids').classList.contains('hidden')) {
-          renderMyBids();
-        }
-        if (!document.getElementById('view-tv').classList.contains('hidden')) {
-          renderTV();
-        }
-      }
-    };
-
-    (async function initApp() {
-      const result = await window.dataSdk.init(dataHandler);
-      if (!result.isOk) {
-        console.error('Data SDK init failed');
-      }
     })();
-
-    // ============================================================
-    // ELEMENT SDK
-    // ============================================================
-    const defaultConfig = {
-      page_title: 'Schoolfeest Kunstveiling 2026',
-      school_name: 'VBS Booischot',
-      background_color: '#fafaf9',
-      surface_color: '#ffffff',
-      text_color: '#1f2937',
-      primary_action_color: '#2e7d32',
-      secondary_action_color: '#10b981'
-    };
-
-    window.elementSdk.init({
-      defaultConfig,
-      onConfigChange: async (config) => {
-        const title = config.page_title || defaultConfig.page_title;
-        document.getElementById('reg-title').textContent = title;
-        document.getElementById('gallery-title').textContent = '🎨 ' + title;
-      },
-      mapToCapabilities: (config) => ({
-        recolorables: [
-          { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
-          { get: () => config.surface_color || defaultConfig.surface_color, set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
-          { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
-          { get: () => config.primary_action_color || defaultConfig.primary_action_color, set: (v) => { config.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); } },
-          { get: () => config.secondary_action_color || defaultConfig.secondary_action_color, set: (v) => { config.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); } },
-        ],
-        borderables: [],
-        fontEditable: undefined,
-        fontSizeable: undefined
-      }),
-      mapToEditPanelValues: (config) => new Map([
-        ['page_title', config.page_title || defaultConfig.page_title],
-        ['school_name', config.school_name || defaultConfig.school_name]
-      ])
-    });
-
-    lucide.createIcons();
    </script>
   </div>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0824df0bd98cfe8',t:'MTc4MDg2MzA3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=window.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </body>
 </html>
