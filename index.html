@@ -46,6 +46,18 @@
       from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+    /* Stijlen voor de full-screen TV slideshow */
+    .tv-slide {
+      display: none;
+      animation: tvFadeIn 0.8s ease-in-out forwards;
+    }
+    .tv-slide.active {
+      display: block;
+    }
+    @keyframes tvFadeIn {
+      from { opacity: 0; filter: blur(5px); }
+      to { opacity: 1; filter: blur(0); }
+    }
   </style>
  </head>
  <body class="h-full bg-stone-50 text-gray-800 overflow-auto">
@@ -192,16 +204,22 @@
     </div>
    </div>
 
-   <div id="view-tv" class="min-h-full hidden bg-slate-950 text-white">
-    <header class="bg-slate-900 border-b border-slate-800 shadow-lg sticky top-0 z-30 py-4 px-8">
-     <div class="flex items-center justify-between">
-      <h1 class="text-4xl font-extrabold tracking-tight text-green-400">🎨 LIVE KUNSTVEILING</h1>
-      <button onclick="backFromTV()" class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-lg transition-colors"><i data-lucide="x" style="width:24px;height:24px;"></i>Sluiten</button>
+   <div id="view-tv" class="min-h-full hidden bg-slate-950 text-white flex flex-col h-screen overflow-hidden">
+    <header class="bg-slate-900 border-b border-slate-800 shadow-lg py-4 px-8 flex items-center justify-between shrink-0">
+     <div class="flex items-center gap-6">
+      <h1 class="text-3xl font-extrabold tracking-tight text-green-400">🎨 LIVE KUNSTVEILING VBS BOOISCHOT</h1>
+      <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-sm">
+       <span class="text-slate-400 font-bold">⏱️ Wisseltijd:</span>
+       <input id="tv-duration-input" type="number" value="7" min="3" max="60" class="w-14 bg-slate-950 text-white font-bold text-center border border-slate-600 rounded px-1 py-0.5 outline-none focus:border-green-400" onchange="updateSlideshowDuration()">
+       <span class="text-slate-400 font-semibold">sec</span>
+      </div>
      </div>
+     <button onclick="backFromTV()" class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-base transition-colors shadow-md"><i data-lucide="x" style="width:20px;height:20px;"></i>Sluiten</button>
     </header>
-    <main class="max-w-7xl mx-auto px-8 py-8">
-     <div id="tv-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8"></div>
-     <p id="tv-empty" class="text-center text-gray-400 text-2xl py-16 hidden">Geen biedingen gevonden.</p>
+    <main class="flex-1 w-full flex items-center justify-center p-6 relative">
+     <div id="tv-slideshow-container" class="w-full h-full max-w-6xl flex items-center justify-center">
+       </div>
+     <p id="tv-empty" class="text-center text-gray-400 text-2xl py-16 hidden">Geen kunstwerken geladen.</p>
     </main>
    </div>
 
@@ -237,6 +255,11 @@
     let currentBidPaintingId = null;
     let biddingEnabled = true;
 
+    // Snelheid en beheer van de slideshow
+    let tvIntervalKey = null;
+    let currentSlideIndex = 0;
+    let slideshowDurationSeconds = 7; 
+
     async function fetchAllBids() {
       try {
         const response = await fetch(SCRIPT_URL);
@@ -254,7 +277,7 @@
     function refreshCurrentView() {
       if (!document.getElementById('view-gallery').classList.contains('hidden')) renderGallery();
       if (!document.getElementById('view-mybids').classList.contains('hidden')) renderMyBids();
-      if (!document.getElementById('view-tv').classList.contains('hidden')) renderTV();
+      if (!document.getElementById('view-tv').classList.contains('hidden')) updateTVDataOnly();
       if (!document.getElementById('view-detail').classList.contains('hidden') && currentBidPaintingId) showDetail(currentBidPaintingId);
     }
 
@@ -286,6 +309,12 @@
         document.getElementById(v).classList.add('hidden');
       });
       document.getElementById(id).classList.remove('hidden');
+      
+      // Stop slideshow als we de TV verlagen of verlaten
+      if (id !== 'view-tv') {
+        clearInterval(tvIntervalKey);
+        tvIntervalKey = null;
+      }
     }
 
     function showGallery() {
@@ -300,7 +329,9 @@
 
     function showTV() {
       showView('view-tv');
+      currentSlideIndex = 0;
       renderTV();
+      startSlideshowLoop();
     }
 
     function backFromTV() { showGallery(); }
@@ -469,9 +500,6 @@
       el.classList.remove('hidden');
     }
 
-    // ============================================================
-    // VOLLEDIG GECORRIGEERDE 'MIJN BIEDINGEN' FILTER LOGICA
-    // ============================================================
     function renderMyBids() {
       if (!currentUser) return;
       
@@ -479,7 +507,6 @@
       const statsEl = document.getElementById('mybids-stats');
       const emptyEl = document.getElementById('mybids-empty');
       
-      // Veilig filteren op telefoonnummer
       const myBids = allBids.filter(b => String(b.bidder_phone).trim() === String(currentUser.phone).trim());
       
       if (myBids.length === 0) {
@@ -496,7 +523,6 @@
       
       const myHighestBidsPerPainting = uniquePaintingIds.map(pId => {
         const myBidsForPainting = myBids.filter(b => b.painting_id === pId);
-        // Beveiliging tegen string-vergelijking bij getallen
         const myTopBid = myBidsForPainting.reduce((max, b) => Number(b.bid_amount) > Number(max.bid_amount) ? b : max, myBidsForPainting[0]);
         
         const absoluteHighestBid = getHighestBid(pId);
@@ -514,7 +540,6 @@
         };
       });
 
-      // Statistiekenbalk opbouwen
       statsEl.innerHTML = `
         <div class="grid grid-cols-2 gap-4 text-center">
           <div><span class="font-black text-blue-600 text-2xl">${uniquePaintingIds.length}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Schilderijen gevolgd</span></div>
@@ -522,7 +547,6 @@
         </div>
       `;
       
-      // Biedingenlijst opbouwen
       listEl.innerHTML = myHighestBidsPerPainting.map(item => {
         const statusBadge = item.is_highest 
           ? `<span class="inline-flex items-center gap-1 bg-green-100 text-green-800 text-xs font-extrabold px-2.5 py-1 rounded-full"><i data-lucide="crown" style="width:12px;height:12px;"></i> 👑 Hoogste bod!</span>`
@@ -545,23 +569,116 @@
       lucide.createIcons();
     }
 
+    // ============================================================
+    // DYNAMISCHE TV SLIDESHOW LOGICA
+    // ============================================================
     function renderTV() {
-      const grid = document.getElementById('tv-grid');
-      const tvData = PAINTINGS.map(p => ({ painting: p, bid: getHighestBid(p.painting_id) })).filter(x => x.bid !== null);
+      const container = document.getElementById('tv-slideshow-container');
       
-      document.getElementById('tv-empty').classList.toggle('hidden', tvData.length > 0);
-      grid.innerHTML = tvData.map(item => `
-        <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-slate-800">
-          <div class="p-6">
-            <p class="text-2xl font-extrabold text-green-400 mb-1">${getPaintingLabel(item.painting.painting_id)}</p>
-            <p class="text-xl text-slate-300 font-bold mb-4">Klas: ${item.painting.class_name}</p>
-            <div class="bg-slate-800 rounded-xl p-4 border border-slate-700">
-              <p class="text-5xl font-black text-emerald-400">€${item.bid.bid_amount}</p>
-              <p class="text-base text-slate-300 font-bold mt-2">Bieder: ${item.bid.bidder_firstname} ${item.bid.bidder_lastname[0]}.</p>
+      if (PAINTINGS.length === 0) {
+        document.getElementById('tv-empty').classList.remove('hidden');
+        container.innerHTML = '';
+        return;
+      }
+      document.getElementById('tv-empty').classList.add('hidden');
+      
+      // Genereer alle dia's (één voor elk schilderij)
+      container.innerHTML = PAINTINGS.map((p, index) => {
+        const highest = getHighestBid(p.painting_id);
+        const priceDisplay = highest ? `€${highest.bid_amount}` : `€${p.starting_price}`;
+        const statusText = highest ? 'Huidig hoogste bod' : 'Startprijs (Geen biedingen)';
+        const bidderText = highest ? `👑 Winnaar momenteel: ${highest.bidder_firstname} ${highest.bidder_lastname[0]}.` : '💶 Wees de eerste bieder!';
+        const borderCardColor = highest ? 'border-green-500' : 'border-slate-800';
+        
+        return `
+          <div id="tv-slide-${index}" class="tv-slide w-full max-w-5xl bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border-2 ${borderCardColor} ${index === currentSlideIndex ? 'active' : ''}">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 p-6 items-center">
+              
+              <div class="md:col-span-7 flex justify-center items-center bg-slate-950 rounded-2xl overflow-hidden p-2 border border-slate-800 h-[65vh]">
+                <img src="${p.image_url}" alt="${p.class_name}" class="max-w-full max-h-full object-contain rounded-xl" onerror="this.src='https://placehold.co/600x400/1e293b/fff?text=${p.class_name}';">
+              </div>
+
+              <div class="md:col-span-5 flex flex-col justify-between h-full space-y-6 px-4">
+                <div>
+                  <span class="bg-green-500/10 text-green-400 font-extrabold px-4 py-1.5 rounded-full text-base tracking-wide border border-green-500/20 uppercase">
+                    ${getPaintingLabel(p.painting_id)}
+                  </span>
+                  <h2 class="text-4xl font-black text-white mt-4 tracking-tight leading-tight">${getClassLabel(p.class_name)}</h2>
+                </div>
+
+                <div class="bg-slate-950/80 rounded-2xl p-6 border border-slate-800 shadow-inner flex flex-col justify-center">
+                  <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">${statusText}</p>
+                  <p id="tv-amount-${p.painting_id}" class="text-6xl font-black text-emerald-400 tracking-tight">${priceDisplay}</p>
+                </div>
+
+                <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700/60">
+                  <p id="tv-bidder-${p.painting_id}" class="text-xl text-slate-200 font-bold">${bidderText}</p>
+                </div>
+                
+                <div class="text-right text-xs font-semibold text-slate-500 italic">
+                  Scan de QR-code bij de inkom om mee te bieden!
+                </div>
+              </div>
+
             </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
+      
+      lucide.createIcons();
+    }
+
+    // Alleen de tekstuele bieddata updaten zonder te haperen
+    function updateTVDataOnly() {
+      PAINTINGS.forEach((p) => {
+        const highest = getHighestBid(p.painting_id);
+        const amtEl = document.getElementById(`tv-amount-${p.painting_id}`);
+        const bdrEl = document.getElementById(`tv-bidder-${p.painting_id}`);
+        
+        if (amtEl && bdrEl) {
+          if (highest) {
+            amtEl.textContent = `€${highest.bid_amount}`;
+            bdrEl.textContent = `👑 Winnaar momenteel: ${highest.bidder_firstname} ${highest.bidder_lastname[0]}.`;
+          } else {
+            amtEl.textContent = `€${p.starting_price}`;
+            bdrEl.textContent = '💶 Wees de eerste bieder!';
+          }
+        }
+      });
+    }
+
+    // Starten en herstarten van de slideshow interval
+    function startSlideshowLoop() {
+      if (tvIntervalKey) clearInterval(tvIntervalKey);
+      
+      tvIntervalKey = setInterval(() => {
+        if (PAINTINGS.length === 0) return;
+        
+        // Verberg de huidige actieve dia
+        const currentSlide = document.getElementById(`tv-slide-${currentSlideIndex}`);
+        if (currentSlide) currentSlide.classList.remove('active');
+        
+        // Bereken de index van de volgende slide
+        currentSlideIndex = (currentSlideIndex + 1) % PAINTINGS.length;
+        
+        // Activeer de volgende slide
+        const nextSlide = document.getElementById(`tv-slide-${currentSlideIndex}`);
+        if (nextSlide) nextSlide.classList.add('active');
+        
+      }, slideshowDurationSeconds * 1000);
+    }
+
+    // Functie waarmee de admin de snelheid live kan veranderen
+    function updateSlideshowDuration() {
+      const input = document.getElementById('tv-duration-input');
+      let val = parseInt(input.value, 10);
+      if (isNaN(val) || val < 3) val = 3;
+      if (val > 60) val = 60;
+      input.value = val;
+      
+      slideshowDurationSeconds = val;
+      // Start de loop direct opnieuw met de nieuwe seconde-waarde
+      startSlideshowLoop();
     }
 
     function showTerms() { document.getElementById('terms-modal').style.display = 'flex'; document.getElementById('terms-modal').classList.remove('hidden'); }
