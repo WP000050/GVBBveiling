@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Veiling Schoolfeest 26 — GVB Booischot</title>
+  <title>Veiling Schoolfeest 26 — VBS Booischot</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -44,6 +44,7 @@
  <body class="h-full bg-stone-50 text-gray-800 overflow-auto">
   <div id="app" class="h-full w-full">
    
+   <!-- REGISTRATIE -->
    <div id="view-register" class="min-h-full flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 w-full max-w-md fade-in border-t-8 border-[#2e7d32]">
      <div class="text-center mb-6">
@@ -57,7 +58,7 @@
        <input id="rf-first" type="text" required class="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-200 focus:border-[#2e7d32] outline-none bg-gray-50 focus:bg-white">
       </div>
       <div>
-       <label for="rf-last" class="block text-sm font-bold text-gray-700 mb-1">Achternaam *</label>
+       <labelRegistry for="rf-last" class="block text-sm font-bold text-gray-700 mb-1">Achternaam *</label>
        <input id="rf-last" type="text" required class="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-200 focus:border-[#2e7d32] outline-none bg-gray-50 focus:bg-white">
       </div>
       <div>
@@ -78,6 +79,7 @@
     </div>
    </div>
 
+   <!-- ADMIN MODAL -->
    <div id="admin-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
     <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm fade-in">
      <div class="flex justify-between items-center mb-4">
@@ -94,6 +96,7 @@
     </div>
    </div>
 
+   <!-- GALERIJ -->
    <div id="view-gallery" class="min-h-full hidden">
     <header class="bg-white shadow-sm border-b-2 border-gray-100 sticky top-0 z-30">
      <div class="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between flex-wrap gap-3">
@@ -123,6 +126,7 @@
     </main>
    </div>
 
+   <!-- MIJN BIEDINGEN -->
    <div id="view-mybids" class="min-h-full hidden">
     <header class="bg-white shadow-sm sticky top-0 z-30">
      <div class="max-w-4xl mx-auto px-4 py-2 flex items-center justify-between">
@@ -140,6 +144,7 @@
     </main>
    </div>
 
+   <!-- DETAIL -->
    <div id="view-detail" class="min-h-full hidden">
     <header class="bg-white shadow-sm sticky top-0 z-30">
      <div class="max-w-5xl mx-auto px-4 py-2 flex items-center justify-between">
@@ -171,6 +176,7 @@
     </main>
    </div>
 
+   <!-- BIED-MODAL -->
    <div id="bid-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
     <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm fade-in border-t-4 border-[#2e7d32]">
      <div class="flex justify-between items-center mb-4">
@@ -188,6 +194,7 @@
     </div>
    </div>
 
+   <!-- VOORWAARDEN -->
    <div id="terms-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background:rgba(0,0,0,0.5);">
     <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md max-h-[80%] overflow-auto fade-in">
      <div class="flex justify-between items-center mb-4">
@@ -197,18 +204,17 @@
      <div class="text-sm text-gray-600 space-y-3">
       <p><strong>1. Bindend karakter:</strong> Elk geplaatst bod is bindend. Door te bieden ga je een koopverplichting aan indien je het hoogste bod hebt op het einde van het schoolfeest.</p>
       <p><strong>2. Winnaar:</strong> Het hoogste bod per schilderij op het einde van het schoolfeest wint de veiling voor dat werk.</p>
-      <p><strong>3. Privacy:</strong> Je gegevens worden enkel gebruikt voor deze veiling og worden na 30 dagen verwijderd.</p>
+      <p><strong>3. Privacy:</strong> Je gegevens worden enkel gebruikt voor deze veiling en worden na 30 dagen verwijderd.</p>
      </div>
      <button onclick="hideTerms()" class="w-full mt-5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-2.5 rounded-lg transition-colors shadow-md">Sluiten</button>
     </div>
    </div>
 
+   <!-- TV VIEW -->
    <div id="view-tv" class="min-h-full hidden bg-slate-950 text-white flex flex-col h-screen overflow-hidden relative group">
-    
     <div class="absolute top-6 left-8 z-50 flex items-center gap-3 pointer-events-none">
       <img src="https://raw.githubusercontent.com/WP000050/GVBBveiling/refs/heads/main/Logo_mascottes%20(1).png" alt="Logo" class="max-h-14 object-contain bg-slate-900/60 p-1.5 rounded-xl border border-slate-800 backdrop-blur shadow-lg">
     </div>
-
     <div class="absolute top-6 right-8 z-50 flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       <button id="toggle-bidding-btn" onclick="toggleBidding()" class="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-4 py-2 rounded-full text-sm shadow-xl transition-all">
         <i data-lucide="check-circle" style="width:16px;height:16px;"></i>Bieden actief
@@ -216,7 +222,6 @@
       <div id="tv-status-badge" class="bg-emerald-500/10 text-emerald-400 text-sm font-extrabold px-4 py-2 rounded-full border border-emerald-500/30 shadow-lg">● Bieden Actief</div>
       <button onclick="backFromTV()" class="text-slate-400 hover:text-white bg-slate-900/80 p-2.5 rounded-full border border-slate-700 shadow-xl"><i data-lucide="x" style="width:20px;height:20px;"></i></button>
     </div>
-    
     <main class="flex-1 w-full flex items-center justify-center p-6 mt-4">
      <div id="tv-slideshow-container" class="w-full h-full max-w-6xl flex items-center justify-center"></div>
     </main>
@@ -228,6 +233,9 @@
    </div>
 
    <script>
+    // ============================================================
+    // APPS SCRIPT URL KOPPELING
+    // ============================================================
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylSKvBxFWAlP3zdxxUcwjIo_vVXu2-n15vRLJFh-RavGesTI8UyzdRox1XDhQrUtp8/exec";
 
     let PAINTINGS = [
@@ -261,7 +269,17 @@
         const response = await fetch(SCRIPT_URL);
         const result = await response.json();
         if (result.isOk) {
-          allBids = result.data;
+          // HERSTELD: Zorg dat de velden correct gekoppeld worden aan het lokale allBids-object
+          allBids = result.data.map(b => ({
+            painting_id: b.painting_id,
+            painting_title: b.painting_title,
+            bidder_firstname: b.bidder_firstname,
+            bidder_lastname: b.bidder_lastname,
+            bidder_phone: b.bidder_phone, // Dit veld ontbrak!
+            bidder_email: b.bidder_email,
+            bid_amount: b.bid_amount,
+            created_at: b.created_at
+          }));
           
           if (result.biddingStatus === "gestopt" && biddingEnabled) {
             biddingEnabled = false;
@@ -276,9 +294,9 @@
       } catch (err) { console.error(err); }
     }
 
-    // Refresh de weergave zonder haperingen
     function refreshCurrentView() {
       if (!document.getElementById('view-gallery').classList.contains('hidden')) renderGallery();
+      if (!document.getElementById('view-mybids').classList.contains('hidden')) renderMyBids();
       if (!document.getElementById('view-tv').classList.contains('hidden')) updateTVDataOnly();
       if (!document.getElementById('view-detail').classList.contains('hidden') && currentBidPaintingId) showDetail(currentBidPaintingId);
     }
@@ -485,10 +503,12 @@
       const listEl = document.getElementById('mybids-list');
       const statsEl = document.getElementById('mybids-stats');
       const emptyEl = document.getElementById('mybids-empty');
+      
+      // Filtert nu perfect omdat b.bidder_phone live uit de sheet gelezen wordt
       const myBids = allBids.filter(b => String(b.bidder_phone).trim() === String(currentUser.phone).trim());
       
       if (myBids.length === 0) {
-        statsEl.innerHTML = '<p class="text-center py-2">Je hebt nog geen biedingen geplaatst.</p>';
+        statsEl.innerHTML = '<p class="text-center py-2 text-gray-500 font-semibold">Je hebt nog geen biedingen geplaatst.</p>';
         listEl.innerHTML = ''; emptyEl.classList.remove('hidden'); return;
       }
       emptyEl.classList.add('hidden');
