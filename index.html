@@ -46,7 +46,6 @@
       from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    /* Stijlen voor de full-screen TV slideshow */
     .tv-slide {
       display: none;
       animation: tvFadeIn 0.8s ease-in-out forwards;
@@ -132,6 +131,9 @@
      </div>
     </header>
     <main class="max-w-6xl mx-auto px-4 py-6">
+     <div id="gallery-closed-notice" class="hidden bg-red-100 border-2 border-red-300 text-red-900 px-4 py-3 rounded-xl font-bold text-center mb-6 text-lg animate-bounce">
+      🛑 De veiling is officieel afgesloten! Er kunnen geen nieuwe biedingen meer geplaatst worden.
+     </div>
      <div id="loading-indicator" class="text-center py-12 text-gray-500 font-bold">🔄 Actuele biedingen inladen uit de spreadsheet...</div>
      <div id="paintings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
     </main>
@@ -161,7 +163,7 @@
     <main class="max-w-5xl mx-auto px-4 py-6">
      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="lg:col-span-2">
-       <img id="detail-image" src="" alt="" loading="lazy" class="rounded-2xl shadow-lg border border-gray-200" style="object-fit:contain; max-width:100%; height:auto;" onerror="this.style.background='#e5e7eb'; this.alt='Afbeelding kon niet geladen worden';">
+       <img id="detail-image" src="" alt="" loading="lazy" class="rounded-2xl shadow-lg border border-gray-200" style="object-fit:contain; max-width:100%; height:auto;" onerror="this.style.background='#e5e7eb';">
       </div>
       <div class="space-y-4">
        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
@@ -173,6 +175,7 @@
         <div id="detail-bid" class="text-2xl font-black text-[#2e7d32]"></div>
        </div>
        <button id="detail-bid-btn" class="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-lg transition-colors shadow-md">💶 Nu Bod Uitbrengen</button>
+       <div id="detail-closed-msg" class="hidden text-center text-red-600 font-bold text-sm bg-red-50 p-2 rounded-lg border border-red-200">❌ Bieden is gesloten</div>
       </div>
      </div>
     </main>
@@ -204,32 +207,43 @@
      <div class="text-sm text-gray-600 space-y-3">
       <p><strong>1. Bindend karakter:</strong> Elk geplaatst bod is bindend. Door te bieden ga je een koopverplichting aan indien je het hoogste bod hebt op het einde van het schoolfeest.</p>
       <p><strong>2. Winnaar:</strong> Het hoogste bod per schilderij op het einde van het schoolfeest wint de veiling voor dat werk.</p>
-      <p><strong>3. Aanwezigheid:</strong> De winnaar dient het werk in ontvangst te nemen en te betalen volgens de richtlijnen van het feest.</p>
-      <p><strong>4. Privacy:</strong> Je gegevens worden enkel gebruikt voor deze veiling en worden na 30 dagen verwijderd.</p>
+      <p><strong>3. Privacy:</strong> Je gegevens worden enkel gebruikt voor deze veiling en worden na 30 dagen verwijderd.</p>
      </div>
      <button onclick="hideTerms()" class="w-full mt-5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-2.5 rounded-lg transition-colors shadow-md">Sluiten</button>
     </div>
    </div>
 
-   <div id="view-tv" class="min-h-full hidden bg-slate-950 text-white flex flex-col h-screen overflow-hidden relative">
-    <div class="absolute top-6 right-8 z-50 flex items-center gap-4">
+   <div id="view-tv" class="min-h-full hidden bg-slate-950 text-white flex flex-col h-screen overflow-hidden relative group">
+    
+    <div class="absolute top-6 right-8 z-50 flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       <div id="tv-status-badge" class="bg-emerald-500/10 text-emerald-400 text-sm font-extrabold px-4 py-2 rounded-full border border-emerald-500/30 shadow-lg">
         ● Bieden Actief
       </div>
-      <button onclick="backFromTV()" class="text-slate-500 hover:text-white bg-slate-900/40 hover:bg-slate-800 p-2.5 rounded-full transition-all border border-slate-800/60 shadow-lg" title="Sluiten">
+      <button onclick="backFromTV()" class="text-slate-400 hover:text-white bg-slate-900/80 hover:bg-slate-800 p-2.5 rounded-full transition-all border border-slate-700 shadow-xl">
         <i data-lucide="x" style="width:20px;height:20px;"></i>
       </button>
     </div>
-    <main class="flex-1 w-full flex items-center justify-center p-6 relative">
+
+    <main class="flex-1 w-full flex items-center justify-center p-6 mt-4">
      <div id="tv-slideshow-container" class="w-full h-full max-w-6xl flex items-center justify-center"></div>
      <p id="tv-empty" class="text-center text-gray-400 text-2xl py-16 hidden">Geen kunstwerken geladen.</p>
     </main>
+
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 backdrop-blur border border-slate-700/60 px-6 py-3 rounded-2xl flex items-center gap-6 shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <button onclick="tvPrev()" class="p-2 hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white transition-colors" title="Vorige">
+        <i data-lucide="skip-back" class="w-6 h-6"></i>
+      </button>
+      <button id="tv-play-pause-btn" onclick="tvTogglePlay()" class="p-3 bg-green-700 hover:bg-green-600 rounded-full text-white transition-all transform hover:scale-105 shadow-md" title="Pauze / Spelen">
+        <i id="tv-play-pause-icon" data-lucide="pause" class="w-6 h-6"></i>
+      </button>
+      <button onclick="tvNext()" class="p-2 hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white transition-colors" title="Volgende">
+        <i data-lucide="skip-forward" class="w-6 h-6"></i>
+      </button>
+    </div>
+
    </div>
 
    <script>
-    // ============================================================
-    // GOOGLE APPS SCRIPT URL KOPPELING
-    // ============================================================
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0Hhm57QavINrPfva6jFs9bNdsoicw1Hqsc3ZfOGXW5JFGR50gnc2trGHdaa5iTBH_/exec";
 
     let PAINTINGS = [
@@ -264,6 +278,7 @@
     let tvIntervalKey = null;
     let currentSlideIndex = 0;
     let slideshowDurationSeconds = 7; 
+    let isSlideshowPlaying = true;
 
     async function fetchAllBids() {
       try {
@@ -271,11 +286,21 @@
         const result = await response.json();
         if (result.isOk) {
           allBids = result.data;
+          
+          // Lees de status live in vanaf de Google Sheet tab 'Status'
+          if (result.biddingStatus === "gestopt" && biddingEnabled) {
+            biddingEnabled = false;
+            applyBiddingStatusUI();
+          } else if (result.biddingStatus === "actief" && !biddingEnabled) {
+            biddingEnabled = true;
+            applyBiddingStatusUI();
+          }
+
           document.getElementById('loading-indicator')?.classList.add('hidden');
           refreshCurrentView();
         }
       } catch (err) {
-        console.error("Fout bij ophalen biedingen:", err);
+        console.error("Fout bij ophalen:", err);
       }
     }
 
@@ -287,12 +312,6 @@
     }
 
     setInterval(fetchAllBids, 15000);
-
-    function formatDate(isoStr) {
-      if(!isoStr) return "";
-      const d = new Date(isoStr);
-      return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-    }
 
     function getPaintingLabel(paintingId) {
       const index = PAINTINGS.findIndex(x => x.painting_id === paintingId);
@@ -334,6 +353,7 @@
     function showTV() {
       showView('view-tv');
       currentSlideIndex = 0;
+      isSlideshowPlaying = true;
       renderTV();
       updateTVStatusBadge();
       startSlideshowLoop();
@@ -351,22 +371,54 @@
       
       const highest = getHighestBid(paintingId);
       if (highest) {
-        document.getElementById('detail-bid').innerHTML = `€${Number(highest.bid_amount)}<br><span class="text-xs text-gray-400 font-normal">${formatDate(highest.created_at)}</span>`;
+        document.getElementById('detail-bid').innerHTML = `€${Number(highest.bid_amount)}`;
       } else {
         document.getElementById('detail-bid').textContent = `€${p.starting_price} (startprijs)`;
       }
       
-      document.getElementById('detail-bid-btn').onclick = (e) => openBidModal(e, paintingId);
+      const bidBtn = document.getElementById('detail-bid-btn');
+      const closedMsg = document.getElementById('detail-closed-msg');
+      if (biddingEnabled) {
+        bidBtn.classList.remove('hidden');
+        closedMsg.classList.add('hidden');
+        bidBtn.onclick = (e) => openBidModal(e, paintingId);
+      } else {
+        bidBtn.classList.add('hidden');
+        closedMsg.classList.remove('hidden');
+      }
+
       showView('view-detail');
       lucide.createIcons();
     }
 
-    function toggleBidding() {
+    // UPDATE STATUS EN COMMUNICER MET DE DATABASE
+    async function toggleBidding() {
+      const nextStatus = biddingEnabled ? "gestopt" : "actief";
       biddingEnabled = !biddingEnabled;
+      applyBiddingStatusUI();
+
+      // Schrijf de status direct weg naar de Google Sheet
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: "toggleStatus", status: nextStatus })
+        });
+      } catch(e) { console.error(e); }
+    }
+
+    function applyBiddingStatusUI() {
       const btn = document.getElementById('toggle-bidding-btn');
-      btn.innerHTML = biddingEnabled ? '<i data-lucide="check-circle" style="width:16px;height:16px;"></i>Bieden actief' : '<i data-lucide="stop-circle" style="width:16px;height:16px;"></i>Bieden gestopt';
-      btn.className = biddingEnabled ? 'flex items-center gap-1 bg-emerald-100 text-emerald-800 font-bold px-3 py-2 rounded-lg text-sm' : 'flex items-center gap-1 bg-red-100 text-red-800 font-bold px-3 py-2 rounded-lg text-sm';
+      if (btn) {
+        btn.innerHTML = biddingEnabled ? '<i data-lucide="check-circle" style="width:16px;height:16px;"></i>Bieden actief' : '<i data-lucide="stop-circle" style="width:16px;height:16px;"></i>Bieden gestopt';
+        btn.className = biddingEnabled ? 'flex items-center gap-1 bg-emerald-100 text-emerald-800 font-bold px-3 py-2 rounded-lg text-sm' : 'flex items-center gap-1 bg-red-100 text-red-800 font-bold px-3 py-2 rounded-lg text-sm';
+      }
       
+      // Toon of verberg live notificatie in de galerij
+      const notice = document.getElementById('gallery-closed-notice');
+      if (notice) notice.classList.toggle('hidden', biddingEnabled);
+
       updateTVStatusBadge();
       lucide.createIcons();
     }
@@ -378,20 +430,18 @@
           tvBadge.textContent = '● Bieden Actief';
           tvBadge.className = 'bg-emerald-500/10 text-emerald-400 text-sm font-extrabold px-4 py-2 rounded-full border border-emerald-500/30 shadow-lg';
         } else {
-          tvBadge.textContent = '🛑 Bieden Gestopt';
-          tvBadge.className = 'bg-red-500/15 text-red-400 text-sm font-extrabold px-4 py-2 rounded-full border border-red-500/30 shadow-lg';
+          tvBadge.textContent = '🛑 Bieden Gestopt / Gesloten';
+          tvBadge.className = 'bg-red-500/20 text-red-400 text-sm font-extrabold px-4 py-2 rounded-full border border-red-500/40 shadow-lg';
         }
       }
     }
 
     function showAdminPanel() {
-      document.getElementById('admin-modal').style.display = 'flex';
       document.getElementById('admin-modal').classList.remove('hidden');
+      document.getElementById('admin-modal').style.display = 'flex';
     }
 
-    function closeAdminModal() {
-      document.getElementById('admin-modal').style.display = 'none';
-    }
+    function closeAdminModal() { document.getElementById('admin-modal').style.display = 'none'; }
 
     function verifyAdminPassword() {
       if (document.getElementById('admin-password-input').value === 'GVBB@m!n') {
@@ -406,7 +456,6 @@
       }
     }
 
-    // GECORRIGEERD: Directe navigatie forceren bij submit
     document.getElementById('reg-form').addEventListener('submit', function (e) {
       e.preventDefault();
       currentUser = {
@@ -416,43 +465,38 @@
         email: document.getElementById('rf-email').value.trim()
       };
       localStorage.setItem('veiling_user', JSON.stringify(currentUser));
-      
-      // Eerst het scherm laden, daarna pas de data asynchroon ophalen om blokkeren te voorkomen
       showGallery();
       fetchAllBids();
     });
 
     function renderGallery() {
       const grid = document.getElementById('paintings-grid');
-      if (grid.children.length === 0) {
-        grid.innerHTML = PAINTINGS.map((p, i) => {
-          return `<div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover cursor-pointer border border-gray-100" onclick="showDetail('${p.painting_id}')">
-            <img src="${p.image_url}" alt="${getPaintingLabel(p.painting_id)}" loading="lazy" class="h-40 w-full object-cover border-b border-gray-100" onerror="this.style.background='${COLORS[i]}';" />
-            <div class="p-4">
-              <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-0.5">${getPaintingLabel(p.painting_id)}</p>
-              <p class="text-sm font-bold text-gray-700 mb-3">${getClassLabel(p.class_name)}</p>
-              <div id="bid-info-${p.painting_id}" class="text-sm mb-3"></div>
-              <button onclick="openBidModal(event, '${p.painting_id}')" class="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-2.5 rounded-lg text-sm transition-colors shadow-sm">💶 Bied mee</button>
-            </div>
-          </div>`;
-        }).join('');
-      }
-      
-      PAINTINGS.forEach(p => {
-        const el = document.getElementById(`bid-info-${p.painting_id}`);
+      grid.innerHTML = PAINTINGS.map((p, i) => {
         const highest = getHighestBid(p.painting_id);
-        if (highest) {
-          el.innerHTML = `<div class="bg-green-50 rounded-lg p-2 border border-green-100 text-center"><span class="font-extrabold text-[#2e7d32] text-base">€${Number(highest.bid_amount)}</span></div>`;
-        } else {
-          el.innerHTML = `<div class="bg-gray-50 rounded-lg p-2 border border-gray-100 text-center text-gray-400 font-semibold text-xs">Startprijs: €${p.starting_price}</div>`;
-        }
-      });
+        const priceHTML = highest 
+          ? `<div class="bg-green-50 rounded-lg p-2 border border-green-100 text-center"><span class="font-extrabold text-[#2e7d32] text-base">€${Number(highest.bid_amount)}</span></div>`
+          : `<div class="bg-gray-50 rounded-lg p-2 border border-gray-100 text-center text-gray-400 font-semibold text-xs">Startprijs: €${p.starting_price}</div>`;
+        
+        const btnHTML = biddingEnabled 
+          ? `<button onclick="openBidModal(event, '${p.painting_id}')" class="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-2.5 rounded-lg text-sm transition-colors shadow-sm">%b-text%</button>`.replace('%b-text%', '💶 Bied mee')
+          : `<button disabled class="w-full bg-gray-200 text-gray-400 font-bold py-2.5 rounded-lg text-sm cursor-not-allowed">🔒 Gesloten</button>`;
+
+        return `<div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover cursor-pointer border border-gray-100" onclick="showDetail('${p.painting_id}')">
+          <img src="${p.image_url}" alt="${getPaintingLabel(p.painting_id)}" loading="lazy" class="h-40 w-full object-cover border-b border-gray-100" onerror="this.style.background='${COLORS[i]}';" />
+          <div class="p-4">
+            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-0.5">${getPaintingLabel(p.painting_id)}</p>
+            <p class="text-sm font-bold text-gray-700 mb-3">${getClassLabel(p.class_name)}</p>
+            <div class="text-sm mb-3">${priceHTML}</div>
+            ${btnHTML}
+          </div>
+        </div>`;
+      }).join('');
     }
 
     function openBidModal(event, paintingId) {
       if (event) event.stopPropagation();
       if (!biddingEnabled) {
-        alert('❌ Bieden is momenteel gestopt door de organisatie.');
+        alert('❌ De veiling is afgelopen. Er worden geen biedingen meer geaccepteerd.');
         return;
       }
       currentBidPaintingId = paintingId;
@@ -479,6 +523,10 @@
     function updateBidPreview() { document.getElementById('bid-preview').textContent = `€${document.getElementById('bid-slider').value}`; }
 
     async function confirmBid() {
+      if (!biddingEnabled) {
+        showBidMsg('❌ Veiling gesloten!', 'red');
+        return;
+      }
       const btn = document.getElementById('bid-confirm-btn');
       btn.disabled = true;
       btn.textContent = '⏳ Verwerken...';
@@ -526,20 +574,17 @@
 
     function renderMyBids() {
       if (!currentUser) return;
-      
       const listEl = document.getElementById('mybids-list');
       const statsEl = document.getElementById('mybids-stats');
       const emptyEl = document.getElementById('mybids-empty');
       
       const myBids = allBids.filter(b => String(b.bidder_phone).trim() === String(currentUser.phone).trim());
-      
       if (myBids.length === 0) {
         statsEl.innerHTML = '<p class="text-gray-500 text-sm font-semibold text-center py-2">Je hebt nog geen biedingen geplaatst.</p>';
         listEl.innerHTML = '';
         emptyEl.classList.remove('hidden');
         return;
       }
-      
       emptyEl.classList.add('hidden');
       
       const uniquePaintingIds = [...new Set(myBids.map(b => b.painting_id))];
@@ -548,12 +593,10 @@
       const myHighestBidsPerPainting = uniquePaintingIds.map(pId => {
         const myBidsForPainting = myBids.filter(b => b.painting_id === pId);
         const myTopBid = myBidsForPainting.reduce((max, b) => Number(b.bid_amount) > Number(max.bid_amount) ? b : max, myBidsForPainting[0]);
-        
         const absoluteHighestBid = getHighestBid(pId);
         const isNuHoogste = absoluteHighestBid && (Number(myTopBid.bid_amount) >= Number(absoluteHighestBid.bid_amount));
         
         if (isNuHoogste) aantalHoogsteBieder++;
-        
         const pInfo = PAINTINGS.find(x => x.painting_id === pId);
         return {
           painting_id: pId,
@@ -564,38 +607,35 @@
         };
       });
 
-      statsEl.innerHTML = `
-        <div class="grid grid-cols-2 gap-4 text-center">
-          <div><span class="font-black text-blue-600 text-2xl">${uniquePaintingIds.length}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Schilderijen gevolgd</span></div>
-          <div><span class="font-black text-[#2e7d32] text-2xl">${aantalHoogsteBieder}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Momenteel hoogste bieder</span></div>
-        </div>
-      `;
+      statsEl.innerHTML = `<div class="grid grid-cols-2 gap-4 text-center">
+        <div><span class="font-black text-blue-600 text-2xl">${uniquePaintingIds.length}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Schilderijen gevolgd</span></div>
+        <div><span class="font-black text-[#2e7d32] text-2xl">${aantalHoogsteBieder}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Momenteel hoogste bieder</span></div>
+      </div>`;
       
       listEl.innerHTML = myHighestBidsPerPainting.map(item => {
         const statusBadge = item.is_highest 
           ? `<span class="inline-flex items-center gap-1 bg-green-100 text-green-800 text-xs font-extrabold px-2.5 py-1 rounded-full"><i data-lucide="crown" style="width:12px;height:12px;"></i> 👑 Hoogste bod!</span>`
           : `<span class="inline-flex items-center gap-1 bg-red-100 text-red-800 text-xs font-extrabold px-2.5 py-1 rounded-full">❌ Overboden (Actueel: €${item.current_top_amount})</span>`;
 
-        return `
-          <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <p class="font-bold text-sm text-gray-900">${getPaintingLabel(item.painting_id)} — ${item.painting_title}</p>
-              <div class="mt-1">${statusBadge}</div>
-            </div>
-            <div class="text-right sm:border-l sm:pl-4">
-              <p class="text-xs text-gray-400 font-bold uppercase">Jouw hoogste bod</p>
-              <p class="font-black text-xl text-[#2e7d32]">€${item.my_amount}</p>
-            </div>
+        return `<div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <p class="font-bold text-sm text-gray-900">${getPaintingLabel(item.painting_id)} — ${item.painting_title}</p>
+            <div class="mt-1">${statusBadge}</div>
           </div>
-        `;
+          <div class="text-right sm:border-l sm:pl-4">
+            <p class="text-xs text-gray-400 font-bold uppercase">Jouw hoogste bod</p>
+            <p class="font-black text-xl text-[#2e7d32]">€${item.my_amount}</p>
+          </div>
+        </div>`;
       }).join('');
-      
       lucide.createIcons();
     }
 
+    // ============================================================
+    // SLIDESHOW TV LOGICA EN MANUELE KNOPPEN
+    // ============================================================
     function renderTV() {
       const container = document.getElementById('tv-slideshow-container');
-      
       if (PAINTINGS.length === 0) {
         document.getElementById('tv-empty').classList.remove('hidden');
         container.innerHTML = '';
@@ -610,41 +650,30 @@
         const bidderText = highest ? `👑 Winnaar momenteel: ${highest.bidder_firstname} ${highest.bidder_lastname[0]}.` : '💶 Wees de eerste bieder!';
         const borderCardColor = highest ? 'border-green-500' : 'border-slate-800';
         
-        return `
-          <div id="tv-slide-${index}" class="tv-slide w-full max-w-5xl bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border-2 ${borderCardColor} ${index === currentSlideIndex ? 'active' : ''}">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 p-6 items-center">
-              
-              <div class="md:col-span-7 flex justify-center items-center bg-slate-950 rounded-2xl overflow-hidden p-2 border border-slate-800 h-[65vh]">
-                <img src="${p.image_url}" alt="${p.class_name}" class="max-w-full max-h-full object-contain rounded-xl" onerror="this.src='https://placehold.co/600x400/1e293b/fff?text=${p.class_name}';">
+        return `<div id="tv-slide-${index}" class="tv-slide w-full max-w-5xl bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border-2 ${borderCardColor} ${index === currentSlideIndex ? 'active' : ''}">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 p-6 items-center">
+            <div class="md:col-span-7 flex justify-center items-center bg-slate-950 rounded-2xl overflow-hidden p-2 border border-slate-800 h-[65vh]">
+              <img src="${p.image_url}" alt="${p.class_name}" class="max-w-full max-h-full object-contain rounded-xl" onerror="this.src='https://placehold.co/600x400/1e293b/fff?text=${p.class_name}';">
+            </div>
+            <div class="md:col-span-5 flex flex-col justify-between h-full space-y-6 px-4">
+              <div>
+                <span class="bg-green-500/10 text-green-400 font-extrabold px-4 py-1.5 rounded-full text-base tracking-wide border border-green-500/20 uppercase">
+                  ${getPaintingLabel(p.painting_id)}
+                </span>
+                <h2 class="text-4xl font-black text-white mt-4 tracking-tight leading-tight">${getClassLabel(p.class_name)}</h2>
               </div>
-
-              <div class="md:col-span-5 flex flex-col justify-between h-full space-y-6 px-4">
-                <div>
-                  <span class="bg-green-500/10 text-green-400 font-extrabold px-4 py-1.5 rounded-full text-base tracking-wide border border-green-500/20 uppercase">
-                    ${getPaintingLabel(p.painting_id)}
-                  </span>
-                  <h2 class="text-4xl font-black text-white mt-4 tracking-tight leading-tight">${getClassLabel(p.class_name)}</h2>
-                </div>
-
-                <div class="bg-slate-950/80 rounded-2xl p-6 border border-slate-800 shadow-inner flex flex-col justify-center">
-                  <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">${statusText}</p>
-                  <p id="tv-amount-${p.painting_id}" class="text-6xl font-black text-emerald-400 tracking-tight">${priceDisplay}</p>
-                </div>
-
-                <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700/60">
-                  <p id="tv-bidder-${p.painting_id}" class="text-xl text-slate-200 font-bold">${bidderText}</p>
-                </div>
-                
-                <div class="text-right text-xs font-semibold text-slate-500 italic">
-                  Scan de QR-code bij de inkom om mee te bieden!
-                </div>
+              <div class="bg-slate-950/80 rounded-2xl p-6 border border-slate-800 shadow-inner flex flex-col justify-center">
+                <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">${statusText}</p>
+                <p id="tv-amount-${p.painting_id}" class="text-6xl font-black text-emerald-400 tracking-tight">${priceDisplay}</p>
               </div>
-
+              <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700/60">
+                <p id="tv-bidder-${p.painting_id}" class="text-xl text-slate-200 font-bold">${bidderText}</p>
+              </div>
+              <div class="text-right text-xs font-semibold text-slate-500 italic">Scan de QR-code bij de inkom om mee te bieden!</div>
             </div>
           </div>
-        `;
+        </div>`;
       }).join('');
-      
       lucide.createIcons();
     }
 
@@ -653,7 +682,6 @@
         const highest = getHighestBid(p.painting_id);
         const amtEl = document.getElementById(`tv-amount-${p.painting_id}`);
         const bdrEl = document.getElementById(`tv-bidder-${p.painting_id}`);
-        
         if (amtEl && bdrEl) {
           if (highest) {
             amtEl.textContent = `€${highest.bid_amount}`;
@@ -668,19 +696,44 @@
 
     function startSlideshowLoop() {
       if (tvIntervalKey) clearInterval(tvIntervalKey);
+      if (!isSlideshowPlaying) return;
       
       tvIntervalKey = setInterval(() => {
-        if (PAINTINGS.length === 0) return;
-        
-        const currentSlide = document.getElementById(`tv-slide-${currentSlideIndex}`);
-        if (currentSlide) currentSlide.classList.remove('active');
-        
-        currentSlideIndex = (currentSlideIndex + 1) % PAINTINGS.length;
-        
-        const nextSlide = document.getElementById(`tv-slide-${currentSlideIndex}`);
-        if (nextSlide) nextSlide.classList.add('active');
-        
+        tvNext();
       }, slideshowDurationSeconds * 1000);
+    }
+
+    // Handmatige navigatie functies voor de TV
+    function goToSlide(index) {
+      const currentSlide = document.getElementById(`tv-slide-${currentSlideIndex}`);
+      if (currentSlide) currentSlide.classList.remove('active');
+      
+      currentSlideIndex = index;
+      if (currentSlideIndex < 0) currentSlideIndex = PAINTINGS.length - 1;
+      if (currentSlideIndex >= PAINTINGS.length) currentSlideIndex = 0;
+      
+      const nextSlide = document.getElementById(`tv-slide-${currentSlideIndex}`);
+      if (nextSlide) nextSlide.classList.add('active');
+    }
+
+    function tvNext() { goToSlide(currentSlideIndex + 1); }
+    function tvPrev() { goToSlide(currentSlideIndex - 1); }
+
+    function tvTogglePlay() {
+      isSlideshowPlaying = !isSlideshowPlaying;
+      const icon = document.getElementById('tv-play-pause-icon');
+      const btn = document.getElementById('tv-play-pause-btn');
+      
+      if (isSlideshowPlaying) {
+        icon.setAttribute('data-lucide', 'pause');
+        btn.className = "p-3 bg-green-700 hover:bg-green-600 rounded-full text-white transition-all transform hover:scale-105 shadow-md";
+        startSlideshowLoop();
+      } else {
+        icon.setAttribute('data-lucide', 'play');
+        btn.className = "p-3 bg-amber-600 hover:bg-amber-500 rounded-full text-white transition-all transform hover:scale-105 shadow-md";
+        clearInterval(tvIntervalKey);
+      }
+      lucide.createIcons();
     }
 
     function updateSlideshowDurationFromGallery() {
@@ -689,30 +742,27 @@
       if (isNaN(val) || val < 3) val = 3;
       if (val > 60) val = 60;
       input.value = val;
-      
       slideshowDurationSeconds = val;
-      
-      if (!document.getElementById('view-tv').classList.contains('hidden')) {
+      if (!document.getElementById('view-tv').classList.contains('hidden') && isSlideshowPlaying) {
         startSlideshowLoop();
       }
     }
 
-    // GECORRIGEERD: Onafhankelijke en veilige initiatievolgorde
+    function showTerms() { document.getElementById('terms-modal').style.display = 'flex'; document.getElementById('terms-modal').classList.remove('hidden'); }
+    function hideTerms() { document.getElementById('terms-modal').style.display = 'none'; }
+
     (function init() {
       if (localStorage.getItem('veiling_admin') === 'true') {
         document.getElementById('toggle-bidding-btn').classList.remove('hidden');
         document.getElementById('admin-speed-control').classList.remove('hidden');
         document.getElementById('tv-link').classList.remove('hidden');
       }
-      
       const stored = localStorage.getItem('veiling_user');
       if (stored) {
         currentUser = JSON.parse(stored);
-        // Direct doorsturen naar de galerij (niet wachten op de trage API-response)
         showGallery();
         fetchAllBids();
       } else {
-        // Indien geen user in het geheugen, toon geforceerd het loginscherm
         showView('view-register');
       }
       lucide.createIcons();
