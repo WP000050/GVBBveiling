@@ -184,7 +184,7 @@
      </div>
      <div class="text-sm text-gray-600 space-y-3">
       <p><strong>1. Bindend karakter:</strong> Elk geplaatst bod is bindend. Door te bieden ga je een koopverplichting aan indien je het hoogste bod hebt op het einde van het schoolfeest.</p>
-      <p><strong>2. Winnaar:</strong> Het hoogste bod per schilderij op het einde van het schoolfeest wins de veiling voor dat werk.</p>
+      <p><strong>2. Winnaar:</strong> Het hoogste bod per schilderij op het einde van het schoolfeest wint de veiling voor dat werk.</p>
       <p><strong>3. Aanwezigheid:</strong> De winnaar dient het werk in ontvangst te nemen en te betalen volgens de richtlijnen van het feest.</p>
       <p><strong>4. Privacy:</strong> Je gegevens worden enkel gebruikt voor deze veiling en worden na 30 dagen verwijderd.</p>
      </div>
@@ -206,9 +206,6 @@
    </div>
 
    <script>
-    // ============================================================
-    // JOUW LIVE API LINK (RECHTSTREEKS VERBONDEN MET SPREADSHEET)
-    // ============================================================
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0Hhm57QavINrPfva6jFs9bNdsoicw1Hqsc3ZfOGXW5JFGR50gnc2trGHdaa5iTBH_/exec";
 
     let PAINTINGS = [
@@ -412,7 +409,6 @@
       
       const slider = document.getElementById('bid-slider');
       slider.min = currentMax + 1;
-      // MAXIMAAL 10 EURO HOGER DAN HET HUIDIGE HOOGSTE BOD
       slider.max = currentMax + 10;
       slider.value = currentMax + 1;
       
@@ -474,33 +470,34 @@
     }
 
     // ============================================================
-    // VERNIEUWDE EN GECORRIGEERDE 'MIJN BIEDINGEN' LOGICA
+    // VOLLEDIG GECORRIGEERDE 'MIJN BIEDINGEN' FILTER LOGICA
     // ============================================================
     function renderMyBids() {
       if (!currentUser) return;
       
-      // Filter alle biedingen geplaatst door dit telefoonnummer
-      const myBids = allBids.filter(b => b.bidder_phone === currentUser.phone);
       const listEl = document.getElementById('mybids-list');
       const statsEl = document.getElementById('mybids-stats');
+      const emptyEl = document.getElementById('mybids-empty');
+      
+      // Veilig filteren op telefoonnummer
+      const myBids = allBids.filter(b => String(b.bidder_phone).trim() === String(currentUser.phone).trim());
       
       if (myBids.length === 0) {
-        listEl.innerHTML = '';
-        document.getElementById('mybids-empty').classList.remove('hidden');
         statsEl.innerHTML = '<p class="text-gray-500 text-sm font-semibold text-center py-2">Je hebt nog geen biedingen geplaatst.</p>';
+        listEl.innerHTML = '';
+        emptyEl.classList.remove('hidden');
         return;
       }
       
-      document.getElementById('mybids-empty').classList.add('hidden');
+      emptyEl.classList.add('hidden');
       
-      // Zoek per schilderij het allersoort hoogste bod uit de database op
       const uniquePaintingIds = [...new Set(myBids.map(b => b.painting_id))];
       let aantalHoogsteBieder = 0;
       
-      // Groepeer jouw eigen hoogste bod per schilderij
       const myHighestBidsPerPainting = uniquePaintingIds.map(pId => {
         const myBidsForPainting = myBids.filter(b => b.painting_id === pId);
-        const myTopBid = myBidsForPainting.reduce((max, b) => b.bid_amount > max.bid_amount ? b : max, myBidsForPainting[0]);
+        // Beveiliging tegen string-vergelijking bij getallen
+        const myTopBid = myBidsForPainting.reduce((max, b) => Number(b.bid_amount) > Number(max.bid_amount) ? b : max, myBidsForPainting[0]);
         
         const absoluteHighestBid = getHighestBid(pId);
         const isNuHoogste = absoluteHighestBid && (Number(myTopBid.bid_amount) >= Number(absoluteHighestBid.bid_amount));
@@ -513,26 +510,28 @@
           painting_title: pInfo ? pInfo.class_name : getPaintingLabel(pId),
           my_amount: Number(myTopBid.bid_amount),
           is_highest: isNuHoogste,
-          current_top_amount: absoluteHighestBid ? Number(absoluteHighestBid.bid_amount) : myTopBid.bid_amount
+          current_top_amount: absoluteHighestBid ? Number(absoluteHighestBid.bid_amount) : Number(myTopBid.bid_amount)
         };
       });
 
-      // Update de statistiekenbalk bovenin
-      statsEl.innerHTML = `<div class="grid grid-cols-2 gap-4 text-center">
-        <div><span class="font-black text-blue-600 text-2xl">${uniquePaintingIds.length}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Schilderijen gevolgd</span></div>
-        <div><span class="font-black text-[#2e7d32] text-2xl">${aantalHoogsteBieder}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Momenteel de hoogste!</span></div>
-      </div>`;
+      // Statistiekenbalk opbouwen
+      statsEl.innerHTML = `
+        <div class="grid grid-cols-2 gap-4 text-center">
+          <div><span class="font-black text-blue-600 text-2xl">${uniquePaintingIds.length}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Schilderijen gevolgd</span></div>
+          <div><span class="font-black text-[#2e7d32] text-2xl">${aantalHoogsteBieder}</span><br><span class="text-xs text-gray-400 font-bold uppercase">Momenteel hoogste bieder</span></div>
+        </div>
+      `;
       
-      // Bouw de lijst met visuele indicatoren
+      // Biedingenlijst opbouwen
       listEl.innerHTML = myHighestBidsPerPainting.map(item => {
         const statusBadge = item.is_highest 
           ? `<span class="inline-flex items-center gap-1 bg-green-100 text-green-800 text-xs font-extrabold px-2.5 py-1 rounded-full"><i data-lucide="crown" style="width:12px;height:12px;"></i> 👑 Hoogste bod!</span>`
-          : `<span class="inline-flex items-center gap-1 bg-red-100 text-red-800 text-xs font-extrabold px-2.5 py-1 rounded-full">❌ Overboden (Nu €${item.current_top_amount})</span>`;
+          : `<span class="inline-flex items-center gap-1 bg-red-100 text-red-800 text-xs font-extrabold px-2.5 py-1 rounded-full">❌ Overboden (Actueel: €${item.current_top_amount})</span>`;
 
         return `
           <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <p class="font-bold text-sm text-gray-900">${getPaintingLabel(item.painting_id)} — Class: ${item.painting_title}</p>
+              <p class="font-bold text-sm text-gray-900">${getPaintingLabel(item.painting_id)} — ${item.painting_title}</p>
               <div class="mt-1">${statusBadge}</div>
             </div>
             <div class="text-right sm:border-l sm:pl-4">
