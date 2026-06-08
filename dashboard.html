@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="nl" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Status - Schoolfeest Veiling</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    .pulse-green { animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body class="bg-amber-50 text-gray-800 min-h-full p-4 sm:p-8">
+
+  <div class="max-w-5xl mx-auto">
+    <div class="bg-white rounded-2xl shadow-sm p-6 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="bg-amber-100 p-3 rounded-xl text-amber-700">
+          <i data-lucide="gavel" class="w-8 h-8"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl font-extrabold text-amber-900">Actuele Hoogste Bieders</h1>
+          <p class="text-sm text-gray-500">Live overzicht van de kunstveiling (Schoolfeest 2026)</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full border border-green-200 text-sm font-semibold">
+        <span class="w-2 h-2 rounded-full bg-green-500 pulse-green"></span>
+        Automatische live-update actief
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-amber-100">
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Totaal Opgebracht</p>
+        <p id="stat-total" class="text-3xl font-black text-amber-600">€ 0</p>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-amber-100">
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Aantal Biedingen</p>
+        <p id="stat-bids" class="text-3xl font-black text-blue-600 font-bold">0</p>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-amber-100">
+        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Hoogste Enkelvoudige Bod</p>
+        <p id="stat-highest" class="text-3xl font-black text-green-600">€ 0</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-amber-600 text-white text-sm font-bold">
+              <th class="p-4">Nr. / Schilderij</th>
+              <th class="p-4">Klas / Kunstenaar</th>
+              <th class="p-4">Hoogste Bieder</th>
+              <th class="p-4 text-right">Actueel Bod</th>
+              <th class="p-4 text-center">Tijdstip</th>
+            </tr>
+          </thead>
+          <tbody id="table-body" class="divide-y divide-gray-100 text-sm">
+            <tr>
+              <td colspan="5" class="p-8 text-center text-gray-400">
+                <div class="flex items-center justify-center gap-2">
+                  <i data-lucide="loader-2" class="w-5 h-5 animate-spin text-amber-500"></i>
+                  Gegevens ophalen en berekenen...
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // CONFIGURATIE - VERVANG DIT DOOR JOUW GOOGLE SPREADSHEET ID
+    const SPREADSHEET_ID = 'https://docs.google.com/spreadsheets/d/1aY9qvLu3MMrSGR7GMSWINhffIsUnD1A5/edit';
+    
+    // Hardcoded lijst van schilderijen conform je hoofd-app (om lege schilderijen ook te tonen)
+    const PAINTINGS = [
+      { id: 'p1', name: 'Werk 1', class: 'Bloemenklas', start: 5 },
+      { id: 'p2', name: 'Werk 2', class: 'Vosjesklas', start: 5 },
+      { id: 'p3', name: 'Werk 3', class: 'Jip en Jannekeklas 1', start: 5 },
+      { id: 'p4', name: 'Werk 4', class: 'Rupsen- en vlinderklas', start: 5 },
+      { id: 'p5', name: 'Werk 5', class: 'Julesklas 1', start: 5 },
+      { id: 'p6', name: 'Werk 6', class: 'Julesklas 2', start: 5 },
+      { id: 'p7', name: 'Werk 7', class: 'Nellie en Cezarklas 1', start: 5 },
+      { id: 'p8', name: 'Werk 8', class: 'Nellie en Cezarklas 2', start: 5 },
+      { id: 'p9', name: 'Werk 9', class: 'Jip en Jannekeklas 2', start: 5 },
+      { id: 'p10', name: 'Werk 10', class: 'L1a', start: 5 },
+      { id: 'p11', name: 'Werk 11', class: 'L1b', start: 5 },
+      { id: 'p12', name: 'Werk 12', class: 'L2a', start: 5 },
+      { id: 'p13', name: 'Werk 13', class: 'L2b', start: 5 },
+      { id: 'p14', name: 'Werk 14', class: 'L3', start: 5 },
+      { id: 'p15', name: 'Werk 15', class: 'L4', start: 5 },
+      { id: 'p16', name: 'Werk 16', class: 'L5a', start: 5 },
+      { id: 'p17', name: 'Werk 17', class: 'L5b', start: 5 },
+      { id: 'p18', name: 'Werk 18', class: 'L6a', start: 5 },
+      { id: 'p19', name: 'Werk 19', class: 'L6b', start: 5 }
+    ];
+
+    function formatTime(isoStr) {
+      if(!isoStr) return '-';
+      const d = new Date(isoStr);
+      if (isNaN(d.getTime())) return isoStr; // fallback als het geen geldige datum is
+      return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    }
+
+    async function fetchLiveBids() {
+      try {
+        // We gebruiken de CSV export-link van Google Sheets, dit vereist geen ingewikkelde API keys!
+        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
+        const response = await fetch(url);
+        const dataText = await response.text();
+        
+        const rows = parseCSV(dataText);
+        renderDashboard(rows);
+      } catch (error) {
+        console.error("Fout bij ophalen Google Sheet data:", error);
+      }
+    }
+
+    // Simpele CSV parser die rekening houdt met quotes
+    function parseCSV(text) {
+      const lines = text.split('\n');
+      if(lines.length <= 1) return [];
+      
+      // Haal header-namen op en maak ze schoon
+      const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+      
+      const result = [];
+      for(let i = 1; i < lines.length; i++) {
+        if(!lines[i].trim()) continue;
+        const columns = lines[i].split(',').map(c => c.replace(/^"|"$/g, '').trim());
+        
+        const rowObj = {};
+        headers.forEach((header, idx) => {
+          rowObj[header] = columns[idx] || '';
+        });
+        result.push(rowObj);
+      }
+      return result;
+    }
+
+    function renderDashboard(rawBids) {
+      // Filter enkel geaccepteerde biedingen
+      const validBids = rawBids.filter(b => b.bid_status === 'accepted' || b.bid_status === ''); 
+      
+      // Groepeer en vind het hoogste bod per painting_id
+      const highestBidsMap = {};
+      validBids.forEach(bid => {
+        const pId = bid.painting_id;
+        const amount = Number(bid.bid_amount);
+        
+        if (!highestBidsMap[pId] || amount > Number(highestBidsMap[pId].bid_amount)) {
+          highestBidsMap[pId] = bid;
+        }
+      });
+
+      // Bereken algemene statistieken
+      let totaalOpbrengst = 0;
+      let hoogsteEnkelBod = 0;
+
+      const tbody = document.getElementById('table-body');
+      
+      // Bouw de tabelrijen op basis van de vaste lijst met schilderijen
+      tbody.innerHTML = PAINTINGS.map(p => {
+        const topBid = highestBidsMap[p.id];
+        const heeftBiedingen = !!topBid;
+        
+        const actueelBedrag = heeftBiedingen ? Number(topBid.bid_amount) : p.start;
+        const biederNaam = heeftBiedingen ? `${topBid.bidder_firstname} ${topBid.bidder_lastname[0]}.` : '<span class="text-gray-400 italic">Nog geen bod</span>';
+        const tijdstip = heeftBiedingen ? formatTime(topBid.created_at) : '-';
+        
+        totaalOpbrengst += actueelBedrag;
+        if (heeftBiedingen && actueelBedrag > hoogsteEnkelBod) {
+          hoogsteEnkelBod = actueelBedrag;
+        }
+
+        return `
+          <tr class="hover:bg-amber-50/50 transition-colors ${heeftBiedingen ? 'bg-white font-semibold' : 'bg-gray-50/50'}">
+            <td class="p-4 font-bold text-amber-800">${p.name}</td>
+            <td class="p-4 text-gray-600">${p.class}</td>
+            <td class="p-4">${biederNaam}</td>
+            <td class="p-4 text-right font-extrabold text-base ${heeftBiedingen ? 'text-green-600' : 'text-gray-400'}">
+              € ${actueelBedrag}
+            </td>
+            <td class="p-4 text-center text-gray-400 text-xs">${tijdstip}</td>
+          </tr>
+        `;
+      }).join('');
+
+      // Update de statistiekenkaarten bovenin
+      document.getElementById('stat-total').textContent = `€ ${totaalOpbrengst}`;
+      document.getElementById('stat-bids').textContent = validBids.length;
+      document.getElementById('stat-highest').textContent = `€ ${hoogsteEnkelBod}`;
+      
+      lucide.createIcons();
+    }
+
+    // Start cyclus: direct laden en daarna elke 5 seconden verversen
+    fetchLiveBids();
+    setInterval(fetchLiveBids, 5000);
+  </script>
+</body>
+</html>
